@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hitster Cycling</title>
+  <style>
+    :root {
+      --yellow: #FFD700;
+      --pink:   #E8407A;
+      --red:    #D62828;
+      --blue:   #1A3A5C;
+      --green:  #2E7D32;
+      --purple: #6A1B9A;
+      --light:  #F5F5F5;
+      --card-bg:#FFFFFF;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0D1B2A;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 0 40px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      width: 100%;
+      background: var(--blue);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 3px solid var(--yellow);
+    }
+    .topbar .logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--yellow);
+      letter-spacing: -0.5px;
+    }
+    .topbar .logo span { color: #fff; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      margin: 24px 16px 0;
+      max-width: 480px;
+      width: calc(100% - 32px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 22px 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 5px 11px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .badge.grote-ronde   { background: #D6E4F0; color: #1A3A5C; }
+    .badge.klassiek      { background: #D5F5E3; color: #1B5E20; }
+    .badge.wk            { background: #FCF3CF; color: #795600; }
+    .badge.memorabel     { background: #FADBD8; color: #922B21; }
+
+    .card-id {
+      font-size: 0.7rem;
+      color: #aaa;
+      font-weight: 600;
+      padding-top: 4px;
+      white-space: nowrap;
+    }
+
+    .card-body { padding: 0 22px 22px; }
+
+    .renner {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #111;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .race {
+      font-size: 0.88rem;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .nat {
+      font-size: 0.88rem;
+      color: #777;
+      margin-bottom: 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #eee;
+      margin: 0 22px 18px;
+    }
+
+    .description {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* ── YEAR REVEAL ── */
+    .reveal-wrap {
+      margin-top: 4px;
+    }
+
+    .btn-reveal {
+      width: 100%;
+      padding: 16px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-reveal:active { transform: scale(0.97); }
+    .btn-reveal:hover  { background: #1e4a7a; }
+
+    .year-display {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--blue), #2a5298);
+      border-radius: 12px;
+      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .year-display.visible { display: flex; }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .year-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--yellow);
+    }
+    .year-number {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .year-sub {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+    }
+
+    /* ── DIFFICULTY ── */
+    .diff-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .diff-label {
+      font-size: 0.75rem;
+      color: #999;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .diff-dots {
+      display: flex;
+      gap: 4px;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+    .dot.filled { background: var(--yellow); }
+
+    /* ── NOT FOUND ── */
+    .not-found {
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .not-found h2 { font-size: 1.5rem; margin-bottom: 10px; color: var(--yellow); }
+    .not-found p  { color: #aaa; }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">🚴 Hitster <span>Cycling</span></div>
+</div>
+
+<div id="root"></div>
+
+<div class="footer">hitster-cycling.com</div>
+
+<script>
+// ── DATASET ─────────────────────────────────────────────────────────────────
+const MOMENTEN = {
+  "HC001": { jaar:1991, cat:"Grote Ronde", renner:"Miguel Induráin", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"Een Spaans klimmer domineert het peloton en rijdt solo naar zijn eerste grote overwinning", lang:"Miguel Induráin won de Tour de France 1991, zijn eerste van vijf opeenvolgende zeges. Hij domineerde de tijdrit en de bergen op weg naar Parijs.", diff:1 },
+  "HC002": { jaar:1992, cat:"Grote Ronde", renner:"Miguel Induráin", nat:"🇪🇸 Spanje", race:"Tour de France + Giro d'Italia", kort:"Een renner wint voor het eerst in jaren zowel de Ronde van Italië als de Ronde van Frankrijk in hetzelfde seizoen", lang:"Induráin voltooide in 1992 de zeldzame Giro-Tour dubbel: hij won zowel de Giro d'Italia als de Tour de France in hetzelfde jaar.", diff:2 },
+  "HC003": { jaar:1993, cat:"Grote Ronde", renner:"Miguel Induráin", nat:"🇪🇸 Spanje", race:"Tour de France + Giro d'Italia", kort:"Voor het tweede jaar op rij lukt het een renner om zowel Italië als Frankrijk te veroveren", lang:"Induráin herhaalde in 1993 zijn Giro-Tour dubbel — een unieke prestatie in de moderne wielergeschiedenis.", diff:3 },
+  "HC004": { jaar:1995, cat:"Grote Ronde", renner:"Miguel Induráin", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"Een renner schrijft wielrengeschiedenis met zijn vijfde opeenvolgende overwinning in de grootste rittenkoers ter wereld", lang:"Miguel Induráin won in 1995 zijn vijfde Tour de France op rij — een record dat tot dan toe nooit vertoond was in het moderne wielrennen.", diff:1 },
+  "HC005": { jaar:1996, cat:"Grote Ronde", renner:"Bjarne Riis", nat:"🇩🇰 Denemarken", race:"Tour de France", kort:"Een Deen verrast de wielerwereld en zet de beste klimmers op de Mont Ventoux volledig in de wind", lang:"Bjarne Riis won de Tour de France 1996, jaren later gaf hij toe dat hij de koers had gewonnen met behulp van EPO.", diff:2 },
+  "HC006": { jaar:1997, cat:"Grote Ronde", renner:"Jan Ullrich", nat:"🇩🇪 Duitsland", race:"Tour de France", kort:"Een 23-jarige Duitser wordt de jongste Tourwinnaar in decennia en rijdt de tijdrit van zijn leven", lang:"Jan Ullrich won in 1997 op 23-jarige leeftijd de Tour de France en leek voorbestemd voor een glorieuze carrière.", diff:2 },
+  "HC007": { jaar:1998, cat:"Grote Ronde", renner:"Marco Pantani", nat:"🇮🇹 Italië", race:"Tour de France + Giro d'Italia", kort:"Een flamboyante Italiaan met zijn kenmerkende bandana klimt als een engel en verovert twee grote rondes in één zomer", lang:"Marco Pantani voltooide in 1998 de legendarische Giro-Tour dubbel. Zijn aanval op Alpe d'Huez hoort tot de mooiste momenten in de wielerhistorie.", diff:2 },
+  "HC008": { jaar:2006, cat:"Grote Ronde", renner:"Óscar Pereiro", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"Na een diskwalificatie weken na de finish wordt een verrassende winnaar alsnog in de geschiedenisboeken geschreven", lang:"Óscar Pereiro werd de officiële Tourwinnaar van 2006 nadat Floyd Landis positief had getest en zijn titel werd ingetrokken.", diff:3 },
+  "HC009": { jaar:2007, cat:"Grote Ronde", renner:"Alberto Contador", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"Een explosieve Spanjaard verslaat een Duitser in de bergen en zet zijn eerste grote stempel op het wielrennen", lang:"Alberto Contador won in 2007 zijn eerste Tour de France, voor Cadel Evans en Levi Leipheimer.", diff:2 },
+  "HC010": { jaar:2008, cat:"Grote Ronde", renner:"Carlos Sastre", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"Een stille werker maakt het verschil op Alpe d'Huez en pakt de gele trui in de slotweek", lang:"Carlos Sastre won de Tour de France 2008 na een aanval op Alpe d'Huez. Zijn broer-in-law Frank Schleck finishte tweede.", diff:3 },
+  "HC011": { jaar:2010, cat:"Grote Ronde", renner:"Andy Schleck", nat:"🇱🇺 Luxemburg", race:"Tour de France", kort:"Een Luxemburger wordt Tourwinnaar na de diskwalificatie van zijn rivaal wegens een verboden stof in een biefstuk", lang:"Andy Schleck werd officieel winnaar van de Tour 2010 nadat Alberto Contador werd gediskwalificeerd vanwege clenbuterol.", diff:3 },
+  "HC012": { jaar:2011, cat:"Grote Ronde", renner:"Cadel Evans", nat:"🇦🇺 Australië", race:"Tour de France", kort:"De eerste Australiër ooit wint de Tour de France na jaren van bijna-misses", lang:"Cadel Evans werd in 2011 de eerste Australische Tourwinnaar. Hij greep de leiding op de slottijdrit en finishte voor de gebroeders Schleck.", diff:2 },
+  "HC013": { jaar:2012, cat:"Grote Ronde", renner:"Bradley Wiggins", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"De eerste Brit ooit wint de Tour de France — een historisch moment voor het Britse wielrennen", lang:"Bradley Wiggins schreef geschiedenis als de eerste Britse Tourwinnaar. Later zou hij ook olympisch kampioen op de tijdrit worden.", diff:1 },
+  "HC014": { jaar:2013, cat:"Grote Ronde", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"Een Brit wint voor het tweede jaar op rij de Tour de France voor zijn team", lang:"Chris Froome won in 2013 zijn eerste Tour de France voor Team Sky, met onder andere een memorabele rit op Mont Ventoux.", diff:1 },
+  "HC015": { jaar:2014, cat:"Grote Ronde", renner:"Vincenzo Nibali", nat:"🇮🇹 Italië", race:"Tour de France", kort:"Een Italiaan domineert een Tour die in de war wordt gestuurd door valpartijen en meerdere favorieten verliest", lang:"Vincenzo Nibali won de Tour 2014 souverein, mede doordat Froome, Contador en Cavendish allemaal uitvielen door valpartijen.", diff:2 },
+  "HC016": { jaar:2015, cat:"Grote Ronde", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"Een klimmer herhaalt zijn succes en wint opnieuw de grootste rittenkoers ter wereld", lang:"Chris Froome won in 2015 zijn tweede Tour de France. Zijn aanval op La Pierre-Saint-Martin in de regen was beeldbepalend.", diff:2 },
+  "HC017": { jaar:2016, cat:"Grote Ronde", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"Een renner bevestigt zijn status als tourwinnaar van zijn generatie met zijn derde grote zege", lang:"Chris Froome pakte zijn derde Tour de France in 2016, ondanks hevige oppositie van Nairo Quintana.", diff:2 },
+  "HC018": { jaar:2017, cat:"Grote Ronde", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Vuelta a España", kort:"De regerende Tourchampion verlegt zijn focus naar Spanje en voegt een tweede grote ronde toe aan zijn palmares", lang:"Chris Froome won in 2017 de Vuelta a España — zijn eerste Vuelta-titel en zijn vierde overwinning in een grote ronde.", diff:3 },
+  "HC019": { jaar:2018, cat:"Grote Ronde", renner:"Geraint Thomas", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"Een ploegmaat van de regerende kampioen verrast iedereen en pakt de gele trui voor zijn teamleider", lang:"Geraint Thomas versloeg zijn eigen ploegmaat Chris Froome en won in 2018 verrassend de Tour de France.", diff:2 },
+  "HC020": { jaar:2019, cat:"Grote Ronde", renner:"Egan Bernal", nat:"🇨🇴 Colombia", race:"Tour de France", kort:"De jongste Tourwinnaar in meer dan een eeuw — een Colombiaan klimt naar de geschiedenisboeken", lang:"Egan Bernal werd op 22-jarige leeftijd de jongste Tourwinnaar in 110 jaar en de eerste Colombiaan die de Tour won.", diff:1 },
+  "HC021": { jaar:2020, cat:"Grote Ronde", renner:"Tadej Pogačar", nat:"🇸🇮 Slovenië", race:"Tour de France", kort:"Op de slottijdrit keert een 21-jarige alles om en snoept zijn landgenoot de gele trui af", lang:"Tadej Pogačar won de Tour 2020 op dramatische wijze: hij overklaste Primož Roglič op de slottijdrit naar La Planche des Belles Filles.", diff:1 },
+  "HC022": { jaar:2021, cat:"Grote Ronde", renner:"Tadej Pogačar", nat:"🇸🇮 Slovenië", race:"Tour de France", kort:"De regerende kampioen bevestigt zijn klasse en wint opnieuw de Tour, nu overtuigend", lang:"Tadej Pogačar domineerde de Tour 2021 van begin tot eind en won voor de tweede keer op rij.", diff:2 },
+  "HC023": { jaar:2021, cat:"Grote Ronde", renner:"Egan Bernal", nat:"🇨🇴 Colombia", race:"Giro d'Italia", kort:"Twee jaar na zijn Tourzege keert een klimmer terug naar de top na een zware blessureperiode en wint de Giro", lang:"Egan Bernal won de Giro d'Italia 2021, zijn tweede grote ronde. Hij herstelde van rugproblemen en domineerde de bergritten.", diff:2 },
+  "HC024": { jaar:2022, cat:"Grote Ronde", renner:"Jonas Vingegaard", nat:"🇩🇰 Denemarken", race:"Tour de France", kort:"Een Deense klimmer verslaat de grote favoriet en verovert verrassend de Tour de France", lang:"Jonas Vingegaard versloeg Tadej Pogačar en won zijn eerste Tour de France. Zijn aanval op Col du Granon was een van de mooiste klimdemonstraties van het moderne tijdperk.", diff:2 },
+  "HC025": { jaar:2022, cat:"Grote Ronde", renner:"Remco Evenepoel", nat:"🇧🇪 België", race:"Vuelta a España", kort:"De eerste Belg in bijna veertig jaar wint een grote ronde", lang:"Remco Evenepoel won de Vuelta 2022 — de eerste Belgische overwinning in een grote ronde sinds Johan De Muynck in 1978.", diff:1 },
+  "HC026": { jaar:2023, cat:"Grote Ronde", renner:"Jonas Vingegaard", nat:"🇩🇰 Denemarken", race:"Tour de France", kort:"Een Deen verdedigt zijn titel met indrukwekkende bergritten en wint de Tour voor de tweede keer", lang:"Jonas Vingegaard won voor het tweede jaar op rij de Tour de France en bewees daarmee dat zijn eerste zege geen toeval was.", diff:2 },
+  "HC027": { jaar:2023, cat:"Grote Ronde", renner:"Primož Roglič", nat:"🇸🇮 Slovenië", race:"Giro d'Italia", kort:"Na jaren van bijna-misses in de Tour pakt een Sloveen eindelijk zijn grote ronde-droom op de roze wegen van Italië", lang:"Primož Roglič won in 2023 de Giro d'Italia, zijn eerste en enige overwinning in een grote ronde buiten de Vuelta.", diff:3 },
+  "HC028": { jaar:2024, cat:"Grote Ronde", renner:"Tadej Pogačar", nat:"🇸🇮 Slovenië", race:"Tour de France", kort:"Na twee jaar in de schaduw keert een Sloveen terug en verplettert het hele peloton op weg naar Parijs", lang:"Tadej Pogačar won in 2024 de Tour de France in dominante stijl. Eerder dat jaar had hij ook al de Giro gewonnen.", diff:1 },
+  "HC029": { jaar:2024, cat:"Grote Ronde", renner:"Tadej Pogačar", nat:"🇸🇮 Slovenië", race:"Giro d'Italia", kort:"Een renner voltooit in het voorjaar de eerste helft van een potentiële Grand Slam — Giro én Tour in één jaar", lang:"Tadej Pogačar won de Giro d'Italia 2024 met groot overwicht en maakte zo de weg vrij voor een poging tot de zeldzame Giro-Tour dubbel.", diff:2 },
+  "HC030": { jaar:1993, cat:"Klassiek", renner:"Johan Museeuw", nat:"🇧🇪 België", race:"Ronde van Vlaanderen", kort:"De Leeuw van Vlaanderen wint voor het eerst de Ronde in zijn achtertuin", lang:"Johan Museeuw won in 1993 voor het eerst de Ronde van Vlaanderen, zijn favoriete koers.", diff:2 },
+  "HC031": { jaar:1995, cat:"Klassiek", renner:"Johan Museeuw", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"De Leeuw wint de koningin der klassiekers in de kasseienstad voor het eerst", lang:"Johan Museeuw won in 1995 zijn eerste Paris-Roubaix in de mythische Vélodrome de Roubaix.", diff:2 },
+  "HC032": { jaar:2000, cat:"Klassiek", renner:"Johan Museeuw", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"Na een zware knieblessure met koudvuurbacterie keert een Belg triomfantelijk terug en wint de Hel van het Noorden", lang:"Museeuw won Paris-Roubaix 2000 in een van de meest emotionele comebacks uit de wielergeschiedenis — twee jaar na een bijna levensbedreigende knieblessure.", diff:1 },
+  "HC033": { jaar:2002, cat:"Klassiek", renner:"Johan Museeuw", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"De Leeuw van Vlaanderen wint voor de derde keer Paris-Roubaix — een record", lang:"Johan Museeuw pakte zijn derde Paris-Roubaix in 2002 en eindigde zijn klassieke periode als een van de grootste ever.", diff:2 },
+  "HC034": { jaar:2005, cat:"Klassiek", renner:"Tom Boonen", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"Een jonge Belg sprint naar zijn eerste zege op de kasseien van Roubaix", lang:"Tom Boonen won Paris-Roubaix 2005, zijn eerste kasseienklassieker, en begon zo zijn dominantie in de Noord-Europese klassiekers.", diff:2 },
+  "HC035": { jaar:2006, cat:"Klassiek", renner:"Tom Boonen", nat:"🇧🇪 België", race:"Ronde van Vlaanderen", kort:"Quickstep's kopman domineert de Vlaamse kasseien en klimmen en wint de Ronde", lang:"Tom Boonen won in 2006 de Ronde van Vlaanderen en bewees zijn veelzijdigheid als klassiekerspecialist.", diff:2 },
+  "HC036": { jaar:2008, cat:"Klassiek", renner:"Tom Boonen", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"De Belg staat opnieuw op het podium van de Vélodrome en wint Roubaix voor de tweede keer", lang:"Tom Boonen won in 2008 zijn tweede Paris-Roubaix en bevestigde zo zijn status als beste kasseienrijder van zijn generatie.", diff:2 },
+  "HC037": { jaar:2009, cat:"Klassiek", renner:"Tom Boonen", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"Op de kasseien van het Noorden wint de Belg voor de derde keer Roubaix in vijf jaar", lang:"Tom Boonen won Paris-Roubaix 2009, zijn derde Roubaix-overwinning.", diff:2 },
+  "HC038": { jaar:2010, cat:"Klassiek", renner:"Fabian Cancellara", nat:"🇨🇭 Zwitserland", race:"Ronde van Vlaanderen + Paris-Roubaix", kort:"Een tijdrijder met de kracht van een motor wint twee kasseienklassiekers in twee weken", lang:"Fabian Cancellara won in 2010 zowel de Ronde van Vlaanderen als Paris-Roubaix. Na zijn solo in de RvV beschuldigden tegenstanders hem (ongefundeerd) van een motor in zijn fiets.", diff:1 },
+  "HC039": { jaar:2011, cat:"Klassiek", renner:"Philippe Gilbert", nat:"🇧🇪 België", race:"Amstel + Flèche + Luik-Bastenaken-Luik", kort:"Een Waalse kampioen veegt de Ardennen-klassiekers compleet schoon in één geweldig voorjaar", lang:"Philippe Gilbert won in 2011 alle drie de Ardennen-klassiekers: de Amstel Gold Race, de Flèche Wallonne én Luik-Bastenaken-Luik — een unieke prestatie.", diff:1 },
+  "HC040": { jaar:2012, cat:"Klassiek", renner:"Tom Boonen", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"De Belg breekt een record met zijn vierde zege in de Hel van het Noorden", lang:"Tom Boonen won in 2012 zijn vierde Paris-Roubaix en evenaarde zo het record van Roger De Vlaeminck.", diff:1 },
+  "HC041": { jaar:2013, cat:"Klassiek", renner:"Fabian Cancellara", nat:"🇨🇭 Zwitserland", race:"Ronde van Vlaanderen", kort:"Spartacus rijdt de concurrentie opnieuw in de grond op de Vlaamse heuvelruggen", lang:"Fabian Cancellara won de Ronde van Vlaanderen 2013 solo na een vernietigende aanval op de Kruisberg.", diff:2 },
+  "HC042": { jaar:2014, cat:"Klassiek", renner:"Fabian Cancellara", nat:"🇨🇭 Zwitserland", race:"Paris-Roubaix", kort:"Spartacus regeert opnieuw op de kasseien en voegt een derde Roubaix-titel toe aan zijn palmares", lang:"Cancellara won Paris-Roubaix 2014 in een sprint van twee na een lange kopgroep, zijn derde Roubaix overall.", diff:2 },
+  "HC043": { jaar:2019, cat:"Klassiek", renner:"Mathieu van der Poel", nat:"🇳🇱 Nederland", race:"Amstel Gold Race", kort:"In de laatste meters ontsnapt een Nederlander op onwaarschijnlijke wijze aan zijn achtervolgers in de meest spectaculaire Amstel-sprint ooit", lang:"Mathieu van der Poel won de Amstel Gold Race 2019 op ongelooflijke wijze: in de laatste 200 meter reed hij Alaphilippe en Fuglsang voorbij na een machtige sprint.", diff:1 },
+  "HC044": { jaar:2020, cat:"Klassiek", renner:"Wout van Aert", nat:"🇧🇪 België", race:"Strade Bianche", kort:"Een Belg rijdt solo over de witte grindwegen van Toscane naar een iconische overwinning", lang:"Wout van Aert won Strade Bianche 2020 met een indrukwekkende solo op de Via Santa Caterina richting Siena.", diff:2 },
+  "HC045": { jaar:2021, cat:"Klassiek", renner:"Mathieu van der Poel", nat:"🇳🇱 Nederland", race:"Ronde van Vlaanderen", kort:"Een Nederlander schrijft zijn naam in de Vlaamse wielergeschiedenis met een solo op de Oude Kwaremont", lang:"Mathieu van der Poel won de Ronde van Vlaanderen 2021 na een machtige aanval op de Oude Kwaremont, voor Wout van Aert.", diff:1 },
+  "HC046": { jaar:2021, cat:"Klassiek", renner:"Sonny Colbrelli", nat:"🇮🇹 Italië", race:"Paris-Roubaix", kort:"Een emotionele Italiaan wint de Hel van het Noorden en viert op zijn knieën in de Vélodrome — zijn laatste grote overwinning", lang:"Sonny Colbrelli won Paris-Roubaix 2021 en barstte in tranen uit op de piste. Maanden later kreeg hij een hartaanval en moest hij stoppen met wielrennen.", diff:1 },
+  "HC047": { jaar:2022, cat:"Klassiek", renner:"Dylan van Baarle", nat:"🇳🇱 Nederland", race:"Paris-Roubaix", kort:"Een Nederlandse hardrijder rijdt solo naar de finish van de Hel van het Noorden", lang:"Dylan van Baarle won Paris-Roubaix 2022 solo voor de Jumbo-Visma ploeg.", diff:3 },
+  "HC048": { jaar:2023, cat:"Klassiek", renner:"Mathieu van der Poel", nat:"🇳🇱 Nederland", race:"Paris-Roubaix", kort:"De wereldkampioen in regenboogtrui wint de Hel van het Noorden in stijl", lang:"Mathieu van der Poel won Paris-Roubaix 2023 als regerende wereldkampioen, zijn eerste Roubaix-overwinning.", diff:2 },
+  "HC049": { jaar:2024, cat:"Klassiek", renner:"Mathieu van der Poel", nat:"🇳🇱 Nederland", race:"Paris-Roubaix", kort:"Een Nederlander herhaalt zijn kasseienkunst en wint voor de tweede keer op rij in de Vélodrome", lang:"Mathieu van der Poel won Paris-Roubaix 2024 voor de tweede keer op rij en bevestigde zijn status als beste kasseienrijder van zijn generatie.", diff:2 },
+  "HC050": { jaar:2019, cat:"Klassiek", renner:"Alberto Bettiol", nat:"🇮🇹 Italië", race:"Ronde van Vlaanderen", kort:"Een onbekende Italiaan verrast iedereen op de Vlaamse heuvelruggen en wint de Ronde solo", lang:"Alberto Bettiol won de Ronde van Vlaanderen 2019 als grote verrassing. Zowel Van der Poel als van Aert kwamen tekort.", diff:2 },
+  "HC051": { jaar:1993, cat:"Wereldkampioenschap", renner:"Lance Armstrong", nat:"🇺🇸 Verenigde Staten", race:"WK Wegwielrennen", kort:"Een jonge Amerikaan verrast de wielergemeenschap en wint verrassend het WK in Oslo", lang:"Lance Armstrong won het WK van 1993 in Oslo als 21-jarige — zijn eerste grote internationale overwinning.", diff:2 },
+  "HC052": { jaar:1996, cat:"Wereldkampioenschap", renner:"Johan Museeuw", nat:"🇧🇪 België", race:"WK Wegwielrennen", kort:"De Leeuw van Vlaanderen toont zijn veelzijdigheid en wint ook het WK op het circuit van Lugano", lang:"Johan Museeuw won het WK van 1996 in Lugano, een bewijs dat zijn kwaliteiten verder gingen dan klassiekers alleen.", diff:3 },
+  "HC053": { jaar:2005, cat:"Wereldkampioenschap", renner:"Tom Boonen", nat:"🇧🇪 België", race:"WK Wegwielrennen", kort:"Een Belg kroont zijn beste seizoen ooit met de regenboogtrui in Madrid", lang:"Tom Boonen won het WK 2005 in Madrid — in hetzelfde jaar dat hij ook Paris-Roubaix won.", diff:2 },
+  "HC054": { jaar:2011, cat:"Wereldkampioenschap", renner:"Mark Cavendish", nat:"🇬🇧 Groot-Brittannië", race:"WK Wegwielrennen", kort:"De snelste man ter wereld viert de perfecte sprint op het circuit van Kopenhagen met de regenboogtrui", lang:"Mark Cavendish won het WK 2011 in Kopenhagen in een perfecte massasprint, ondersteund door een sterk Brits team.", diff:2 },
+  "HC055": { jaar:2012, cat:"Wereldkampioenschap", renner:"Philippe Gilbert", nat:"🇧🇪 België", race:"WK Wegwielrennen", kort:"De Belgische kampioen van het voorjaar bevestigt zijn seizoen met de regenboogtrui in Limburg", lang:"Philippe Gilbert won het WK 2012 in Valkenburg, op een parcours dat hem op het lijf geschreven was.", diff:2 },
+  "HC056": { jaar:2015, cat:"Wereldkampioenschap", renner:"Peter Sagan", nat:"🇸🇰 Slowakije", race:"WK Wegwielrennen", kort:"Een Slowaak met het talent van tien rijders begint zijn historische serie WK-titels", lang:"Peter Sagan won het WK 2015 in Richmond — zijn eerste van een ongeziene reeks wereldtitels.", diff:2 },
+  "HC057": { jaar:2016, cat:"Wereldkampioenschap", renner:"Peter Sagan", nat:"🇸🇰 Slowakije", race:"WK Wegwielrennen", kort:"De regerende kampioen verlengt zijn titel en toont dat zijn eerste zege geen toeval was", lang:"Peter Sagan won het WK 2016 in Doha en werd de eerste renner die twee opeenvolgende WK-titels pakte in de moderne era.", diff:2 },
+  "HC058": { jaar:2017, cat:"Wereldkampioenschap", renner:"Peter Sagan", nat:"🇸🇰 Slowakije", race:"WK Wegwielrennen", kort:"Een fenomeen wint zijn derde WK op rij — een prestatie die niemand ooit eerder vertoond heeft", lang:"Peter Sagan won het WK 2017 in Bergen en schreef zo geschiedenis als de eerste renner ooit die drie opeenvolgende WK-titels veroverde.", diff:1 },
+  "HC059": { jaar:2020, cat:"Wereldkampioenschap", renner:"Julian Alaphilippe", nat:"🇫🇷 Frankrijk", race:"WK Wegwielrennen", kort:"Een Franse aanvaller wint het WK solo in Imola en brengt de regenboogtrui terug naar Frankrijk", lang:"Julian Alaphilippe won het WK 2020 in Imola met een verbluffende solo aanval op het slotcircuit.", diff:2 },
+  "HC060": { jaar:2021, cat:"Wereldkampioenschap", renner:"Julian Alaphilippe", nat:"🇫🇷 Frankrijk", race:"WK Wegwielrennen", kort:"De regerende wereldkampioen pakt opnieuw goud met een aanval die niemand kan volgen", lang:"Julian Alaphilippe won het WK 2021 in Leuven voor eigen publiek en verdedigde zo zijn titel met verve.", diff:2 },
+  "HC061": { jaar:2022, cat:"Wereldkampioenschap", renner:"Remco Evenepoel", nat:"🇧🇪 België", race:"WK Wegwielrennen", kort:"Nauwelijks twee weken na zijn Vuelta-zege rijdt een Belg ook de regenboogtrui naar huis", lang:"Remco Evenepoel won het WK 2022 in Wollongong — slechts twee weken na zijn Vuelta-overwinning.", diff:1 },
+  "HC062": { jaar:2023, cat:"Wereldkampioenschap", renner:"Mathieu van der Poel", nat:"🇳🇱 Nederland", race:"WK Wegwielrennen", kort:"Een Nederlander wint het WK op een technisch parcours na een aanval op de slotklim", lang:"Mathieu van der Poel won het WK 2023 in Glasgow — zijn eerste regenboogtrui in het wegwielrennen.", diff:2 },
+  "HC063": { jaar:2024, cat:"Wereldkampioenschap", renner:"Tadej Pogačar", nat:"🇸🇮 Slovenië", race:"WK Wegwielrennen", kort:"Na zijn Tour-zege rijdt een Sloveen ook het WK naar huis en kroont zo een historisch seizoen", lang:"Tadej Pogačar won het WK 2024 in Zürich na een solo aanval en voltooide zo een bijna onvoorstelbaar seizoen met Giro, Tour én WK.", diff:1 },
+  "HC064": { jaar:1995, cat:"Memorabel Moment", renner:"Fabio Casartelli", nat:"🇮🇹 Italië", race:"Tour de France", kort:"Een olimpisch kampioen komt nooit aan in de vallei — het wielrennen rouwt om een van zijn eigen", lang:"Fabio Casartelli overleed op 18 juli 1995 na een val op de afdaling van de Col de Portet d'Aspet tijdens de Tour. De dag erna won zijn ploeggenoot Lance Armstrong de rit ter nagedachtenis.", diff:1 },
+  "HC065": { jaar:1998, cat:"Memorabel Moment", renner:"Festina-ploeg", nat:"🇫🇷 Frankrijk", race:"Tour de France", kort:"Het grootste dopingschandaal in de wielergeschiedenis breekt uit vlak voor de start van de Tour", lang:"De Festina-affaire in 1998 legde massaal dopinggebruik in het peloton bloot. Ploegleider Bruno Roussel werd gearresteerd met een auto vol EPO en andere middelen.", diff:1 },
+  "HC066": { jaar:1999, cat:"Memorabel Moment", renner:"Marco Pantani", nat:"🇮🇹 Italië", race:"Giro d'Italia", kort:"De leider in de Giro wordt vlak voor de finish uit de koers gezet na een bloedtest", lang:"Marco Pantani werd in 1999 uit de Giro gezet wegens een te hoog hematocrietgehalte. Dit was het begin van zijn tragische neergang.", diff:2 },
+  "HC067": { jaar:2006, cat:"Memorabel Moment", renner:"Floyd Landis", nat:"🇺🇸 Verenigde Staten", race:"Tour de France", kort:"Een dag na zijn legendarische aanval in de bergen verliest de schijnbare Tourwinnaar alles door een positieve test", lang:"Floyd Landis won de Tour 2006 maar werd gediskwalificeerd na een positieve test op synthetisch testosteron na zijn fameuze etappeoverwinning in de Alpen.", diff:2 },
+  "HC068": { jaar:2010, cat:"Memorabel Moment", renner:"Alberto Contador", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"De Tourwinnaar claimt dat een besmette biefstuk de oorzaak is van een spoor verboden stof in zijn bloed", lang:"Alberto Contador testte positief op clenbuterol tijdens de Tour 2010 en beweerde dat dit kwam door besmet vlees. Hij werd uiteindelijk twee jaar geschorst en verloor zijn Tourzege.", diff:1 },
+  "HC069": { jaar:2013, cat:"Memorabel Moment", renner:"Lance Armstrong", nat:"🇺🇸 Verenigde Staten", race:"Oprah Winfrey-interview", kort:"De meest gedecoreerde wielrenner ter wereld geeft in een televisieoptreden toe jarenlang systematisch gedopeerd te hebben", lang:"Lance Armstrong gaf in januari 2013 in een interview met Oprah Winfrey toe dat hij tijdens al zijn zeven Tour-overwinningen gedopeerd had. Zijn zeven titels waren al eerder geschrapt.", diff:1 },
+  "HC070": { jaar:2015, cat:"Memorabel Moment", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France — Mont Ventoux", kort:"Na een botsing met een motorfiets op Mont Ventoux verlaat de geletruidrager zijn fiets en holt te voet de berg op", lang:"Chris Froome moest tijdens de Tour 2015 te voet verder na een botsing met motorfietsen op Mont Ventoux. Het UCI kende hem daarna 30 seconden terug toe.", diff:1 },
+  "HC071": { jaar:2020, cat:"Memorabel Moment", renner:"Pogačar vs Roglič", nat:"🇸🇮 Slovenië", race:"Tour de France — slottijdrit", kort:"In de laatste tijdrit verschuift de macht: de zekere winnaar verliest alles in een halve minuut", lang:"Op de voorlaatste dag van de Tour 2020 verwoestte Tadej Pogačar het tijdrijden van Primož Roglič volledig op La Planche des Belles Filles en greep zo de gele trui.", diff:1 },
+  "HC072": { jaar:2021, cat:"Memorabel Moment", renner:"Mark Cavendish", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"Een renner die men dood waande in de Tour breekt het absolute record van sprinterlegende Eddy Merckx", lang:"Mark Cavendish won in 2021 zijn 34e Touretappe en evenaarde zo het record van Eddy Merckx. Later dat jaar brak hij het definitief.", diff:1 },
+  "HC073": { jaar:2021, cat:"Memorabel Moment", renner:"Sonny Colbrelli", nat:"🇮🇹 Italië", race:"Paris-Roubaix / Hartaanval", kort:"Maanden na zijn overwinning in de Hel van het Noorden moet een renner stoppen door een hartstilstand tijdens een koers", lang:"Sonny Colbrelli won Paris-Roubaix 2021 emotioneel. Maanden later kreeg hij een hartstilstand tijdens een koers en moest hij zijn carrière beëindigen.", diff:2 },
+  "HC074": { jaar:2022, cat:"Memorabel Moment", renner:"Remco Evenepoel", nat:"🇧🇪 België", race:"Vuelta + WK", kort:"Een Belg wint in hetzelfde jaar een grote ronde én het wereldkampioenschap — voor het eerst in decennia", lang:"Remco Evenepoel won in 2022 zowel de Vuelta als het WK, een combinatie die al generaties niet meer voorgekomen was.", diff:2 },
+  "HC075": { jaar:2024, cat:"Memorabel Moment", renner:"Jonas Vingegaard", nat:"🇩🇰 Denemarken", race:"Itzulia Baskenland — crash", kort:"De regerende Tourchampion valt in het voorjaar zwaar en breekt meerdere ribben en zijn sleutelbeen", lang:"Jonas Vingegaard viel zwaar tijdens de Itzulia in april 2024 en liep gebroken ribben, een sleutelbeen en een klaplong op. Zijn Tour-deelname leek onzeker maar hij startte toch.", diff:1 },
+  "HC076": { jaar:1996, cat:"Memorabel Moment", renner:"Bjarne Riis", nat:"🇩🇰 Denemarken", race:"Dopingbekentenis", kort:"De Tourwinnaar van een decennium eerder erkent dat hij zijn zege behaalde met verboden middelen", lang:"Bjarne Riis gaf in 2007 toe dat hij EPO had gebruikt tijdens zijn Touroverwinning van 1996. Hij werd 'meneer 60%' genoemd vanwege zijn hematocrietwaarde.", diff:2 },
+  "HC077": { jaar:2003, cat:"Memorabel Moment", renner:"Lance Armstrong", nat:"🇺🇸 Verenigde Staten", race:"Tour de France — Joseba Beloki crash", kort:"Een dramatische val van een concurrent redt de geletruidrager van een zware valpartij in de afdaling", lang:"In de Tour 2003 raakte Joseba Beloki op de afdaling de controle kwijt. Armstrong reed over een veld om de val te vermijden — een van de meest memorabele momenten ooit.", diff:3 },
+  "HC078": { jaar:2012, cat:"Memorabel Moment", renner:"Team Sky", nat:"🇬🇧 Groot-Brittannië", race:"Tour de France", kort:"Een Brits team revolutioneert de wielertactiek met data, marginal gains en een onverslaanbare trein", lang:"Team Sky domineerde de Tour 2012 met een totaal nieuwe aanpak: data-gedreven training, marginal gains en een ploeg gebouwd rond het beschermen van één leider.", diff:3 },
+  "HC079": { jaar:2018, cat:"Memorabel Moment", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Giro d'Italia — rit 19", kort:"Met nog tachtig kilometer te rijden ontsnapt de Giro-leider solo en rijdt hij iedereen op een minuut", lang:"Chris Froome viel solo aan op de afdaling van de Colle delle Finestre met nog 80 km te gaan en won zo de Giro 2018 op sensationele wijze.", diff:1 },
+  "HC080": { jaar:2019, cat:"Memorabel Moment", renner:"Chris Froome", nat:"🇬🇧 Groot-Brittannië", race:"Training crash", kort:"De viervoudige Tourwinnaar crasht zwaar op een trainingsritje en vecht voor zijn leven in het ziekenhuis", lang:"Chris Froome crashte in juni 2019 tijdens een verkenning van een tijdritparcours en liep levensbedreigende verwondingen op.", diff:2 },
+  "HC081": { jaar:2022, cat:"Memorabel Moment", renner:"Jonas Vingegaard", nat:"🇩🇰 Denemarken", race:"Tour de France — Col du Granon", kort:"Op een epische bergrit verslaat een Deen de beste klimmer van zijn generatie en niemand kon hem volgen", lang:"Jonas Vingegaard reed Tadej Pogačar op de Col du Granon volledig kapot in de Tour 2022 en pakte daarmee de gele trui. De beelden van Pogačar die zijn hoofd schudt gingen de wereld over.", diff:1 },
+  "HC082": { jaar:2017, cat:"Memorabel Moment", renner:"Peter Sagan", nat:"🇸🇰 Slowakije", race:"Tour de France — diskwalificatie sprint", kort:"De wereldkampioen wordt met de schande uit de Tour gezet wegens een elleboogbeweging in een massasprint", lang:"Peter Sagan werd in de Tour 2017 gediskwalificeerd na een incident met Mark Cavendish in de sprint. De beslissing was zeer controversieel.", diff:2 },
+  "HC083": { jaar:2014, cat:"Memorabel Moment", renner:"Vincenzo Nibali", nat:"🇮🇹 Italië", race:"Tour de France — favorieten uitgevallen", kort:"De leider van de Tour rijdt zijn concurrenten kapot terwijl favoriet na favoriet bezwijkt aan blessures", lang:"Tour 2014 begon al rampzalig: Froome, Contador, Cavendish vielen alle drie uit. Nibali profiteerde maximaal en won overtuigend.", diff:2 },
+};
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const id     = (params.get('id') || '').toUpperCase();
+const m      = MOMENTEN[id];
+const root   = document.getElementById('root');
+
+function catClass(cat) {
+  if (cat === 'Grote Ronde')         return 'grote-ronde';
+  if (cat === 'Klassiek')            return 'klassiek';
+  if (cat === 'Wereldkampioenschap') return 'wk';
+  return 'memorabel';
+}
+function catIcon(cat) {
+  if (cat === 'Grote Ronde')         return '🏆';
+  if (cat === 'Klassiek')            return '🪨';
+  if (cat === 'Wereldkampioenschap') return '🌍';
+  return '⚡';
+}
+function dots(diff) {
+  return [1,2,3].map(i =>
+    `<div class="dot ${i <= diff ? 'filled' : ''}"></div>`
+  ).join('');
+}
+
+if (!m) {
+  root.innerHTML = `
+    <div class="not-found">
+      <h2>Kaart niet gevonden</h2>
+      <p>Gebruik een geldige QR-code van een Hitster Cycling kaart.</p>
+    </div>`;
+} else {
+  root.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <span class="badge ${catClass(m.cat)}">${catIcon(m.cat)} ${m.cat}</span>
+        <span class="card-id">${id}</span>
+      </div>
+      <div class="card-body">
+        <div class="renner">${m.renner}</div>
+        <div class="nat">${m.nat}</div>
+        <div class="race">${m.race}</div>
+        <div class="diff-row">
+          <span class="diff-label">Moeilijkheid</span>
+          <div class="diff-dots">${dots(m.diff)}</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-body">
+        <p class="description">${m.lang}</p>
+        <div class="reveal-wrap">
+          <button class="btn-reveal" id="btn">🔒 Onthul het jaar</button>
+          <div class="year-display" id="yr">
+            <div class="year-label">Het jaar</div>
+            <div class="year-number">${m.jaar}</div>
+            <div class="year-sub">Leg de kaart op je tijdlijn!</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('btn').addEventListener('click', () => {
+    document.getElementById('btn').style.display = 'none';
+    document.getElementById('yr').classList.add('visible');
+  });
+}
+</script>
+</body>
+</html>
