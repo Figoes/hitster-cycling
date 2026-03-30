@@ -5,47 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hitster Cycling</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700;800&display=swap');
+
     :root {
-      --yellow: #FFD700;
-      --pink:   #E8407A;
-      --red:    #D62828;
-      --blue:   #1A3A5C;
-      --green:  #2E7D32;
-      --purple: #6A1B9A;
-      --light:  #F5F5F5;
-      --card-bg:#FFFFFF;
+      --neon-pink:   #FF1493;
+      --neon-blue:   #00B4FF;
+      --neon-yellow: #FFD700;
+      --neon-orange: #FF6B00;
+      --bg:          #080808;
+      --card-bg:     #111111;
+      --card-border: rgba(255,20,147,0.25);
+      --text:        #F0F0F0;
+      --text-dim:    rgba(240,240,240,0.5);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0D1B2A;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 0 0 40px;
+      padding: 0 0 48px;
     }
 
     /* ── TOP BAR ── */
     .topbar {
       width: 100%;
-      background: var(--blue);
-      padding: 14px 20px;
+      background: #000;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-bottom: 3px solid var(--yellow);
+      justify-content: center;
+      border-bottom: 1px solid rgba(255,20,147,0.3);
+      box-shadow: 0 0 24px rgba(255,20,147,0.15);
     }
-    .topbar .logo {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--yellow);
-      letter-spacing: -0.5px;
+    .topbar img.logo-img {
+      height: 64px;
+      width: auto;
+      display: block;
     }
-    .topbar .logo span { color: #fff; }
 
     /* ── CARD ── */
     .card {
@@ -54,7 +56,8 @@
       margin: 24px 16px 0;
       max-width: 480px;
       width: calc(100% - 32px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 0 32px rgba(255,20,147,0.08), 0 8px 32px rgba(0,0,0,0.6);
       overflow: hidden;
     }
 
@@ -70,91 +73,99 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      padding: 5px 11px;
+      letter-spacing: 1px;
+      padding: 5px 12px;
       border-radius: 20px;
       white-space: nowrap;
     }
-    .badge.grote-ronde   { background: #D6E4F0; color: #1A3A5C; }
-    .badge.klassiek      { background: #D5F5E3; color: #1B5E20; }
-    .badge.wk            { background: #FCF3CF; color: #795600; }
-    .badge.memorabel     { background: #FADBD8; color: #922B21; }
+    .badge.grote-ronde { background: rgba(0,100,255,0.15); color: #4DA6FF; border: 1px solid rgba(0,100,255,0.4); }
+    .badge.klassiek    { background: rgba(0,200,80,0.12);  color: #4DFF88; border: 1px solid rgba(0,200,80,0.4); }
+    .badge.wk          { background: rgba(255,215,0,0.12); color: #FFD700; border: 1px solid rgba(255,215,0,0.4); }
+    .badge.memorabel   { background: rgba(255,40,40,0.12); color: #FF6060; border: 1px solid rgba(255,40,40,0.4); }
 
     .card-id {
-      font-size: 0.7rem;
-      color: #aaa;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.3);
       font-weight: 600;
       padding-top: 4px;
       white-space: nowrap;
+      font-family: 'Orbitron', monospace;
     }
 
     .card-body { padding: 0 22px 22px; }
 
     .renner {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      color: #111;
+      color: var(--text);
       line-height: 1.2;
       margin-bottom: 4px;
+      text-shadow: 0 0 20px rgba(255,20,147,0.3);
     }
     .race {
-      font-size: 0.88rem;
-      color: #555;
+      font-size: 0.85rem;
+      color: var(--neon-blue);
       font-weight: 600;
-      margin-bottom: 16px;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
     }
     .nat {
-      font-size: 0.88rem;
-      color: #777;
-      margin-bottom: 16px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 18px;
     }
 
     .divider {
       height: 1px;
-      background: #eee;
+      background: rgba(255,255,255,0.06);
       margin: 0 22px 18px;
     }
 
     .description {
-      font-size: 1rem;
-      line-height: 1.65;
-      color: #333;
+      font-size: 0.97rem;
+      line-height: 1.7;
+      color: rgba(240,240,240,0.8);
       margin-bottom: 20px;
     }
 
     /* ── YEAR REVEAL ── */
-    .reveal-wrap {
-      margin-top: 4px;
-    }
+    .reveal-wrap { margin-top: 4px; }
 
     .btn-reveal {
       width: 100%;
       padding: 16px;
-      background: var(--blue);
-      color: #fff;
-      font-size: 1.05rem;
+      background: transparent;
+      color: var(--neon-pink);
+      font-size: 1rem;
       font-weight: 700;
-      border: none;
+      border: 2px solid var(--neon-pink);
       border-radius: 12px;
       cursor: pointer;
-      letter-spacing: 0.3px;
-      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.5px;
+      font-family: 'Inter', Arial, sans-serif;
+      box-shadow: 0 0 16px rgba(255,20,147,0.2), inset 0 0 16px rgba(255,20,147,0.04);
+      transition: all 0.2s;
+    }
+    .btn-reveal:hover {
+      background: rgba(255,20,147,0.1);
+      box-shadow: 0 0 28px rgba(255,20,147,0.4), inset 0 0 16px rgba(255,20,147,0.08);
     }
     .btn-reveal:active { transform: scale(0.97); }
-    .btn-reveal:hover  { background: #1e4a7a; }
 
     .year-display {
       display: none;
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      padding: 20px;
-      background: linear-gradient(135deg, var(--blue), #2a5298);
+      padding: 24px 20px;
+      background: #000;
       border-radius: 12px;
-      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      border: 1px solid rgba(255,215,0,0.3);
+      box-shadow: 0 0 40px rgba(255,215,0,0.12);
+      animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
     }
     .year-display.visible { display: flex; }
 
@@ -164,22 +175,24 @@
     }
 
     .year-label {
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--yellow);
+      letter-spacing: 2px;
+      color: var(--neon-yellow);
+      font-family: 'Orbitron', monospace;
     }
     .year-number {
-      font-size: 4rem;
+      font-size: 4.5rem;
       font-weight: 900;
-      color: #fff;
+      color: var(--neon-yellow);
       line-height: 1;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      font-family: 'Orbitron', monospace;
+      text-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3);
     }
     .year-sub {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.7);
+      font-size: 0.8rem;
+      color: rgba(255,215,0,0.5);
       text-align: center;
     }
 
@@ -191,45 +204,54 @@
       margin-bottom: 18px;
     }
     .diff-label {
-      font-size: 0.75rem;
-      color: #999;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.3);
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
-    .diff-dots {
-      display: flex;
-      gap: 4px;
-    }
+    .diff-dots { display: flex; gap: 5px; }
     .dot {
-      width: 10px; height: 10px;
+      width: 9px; height: 9px;
       border-radius: 50%;
-      background: #ddd;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.1);
     }
-    .dot.filled { background: var(--yellow); }
+    .dot.filled {
+      background: var(--neon-pink);
+      box-shadow: 0 0 8px var(--neon-pink);
+      border-color: var(--neon-pink);
+    }
 
     /* ── NOT FOUND ── */
     .not-found {
-      color: #fff;
+      color: var(--text);
       text-align: center;
       padding: 60px 20px;
     }
-    .not-found h2 { font-size: 1.5rem; margin-bottom: 10px; color: var(--yellow); }
-    .not-found p  { color: #aaa; }
+    .not-found h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: var(--neon-pink);
+      font-family: 'Orbitron', monospace;
+      text-shadow: 0 0 20px var(--neon-pink);
+    }
+    .not-found p { color: var(--text-dim); }
 
     /* ── FOOTER ── */
     .footer {
-      margin-top: 28px;
+      margin-top: 32px;
       text-align: center;
-      color: rgba(255,255,255,0.3);
-      font-size: 0.72rem;
+      color: rgba(255,255,255,0.15);
+      font-size: 0.68rem;
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="logo">🚴 Hitster <span>Cycling</span></div>
+  <img src="logo.png" alt="Hitster Cycling" class="logo-img" />
 </div>
 
 <div id="root"></div>
@@ -322,6 +344,40 @@ const MOMENTEN = {
   "HC081": { jaar:2022, cat:"Memorabel Moment", renner:"Jonas Vingegaard", nat:"🇩🇰 Denemarken", race:"Tour de France — Col du Granon", kort:"Op een epische bergrit verslaat een Deen de beste klimmer van zijn generatie en niemand kon hem volgen", lang:"Jonas Vingegaard reed Tadej Pogačar op de Col du Granon volledig kapot en pakte daarmee de gele trui. De beelden van Pogačar die zijn hoofd schudt gingen de wereld over.", diff:1 },
   "HC082": { jaar:2017, cat:"Memorabel Moment", renner:"Peter Sagan", nat:"🇸🇰 Slowakije", race:"Tour de France — diskwalificatie sprint", kort:"De wereldkampioen wordt met de schande uit de Tour gezet wegens een elleboogbeweging in een massasprint", lang:"Peter Sagan werd gediskwalificeerd uit de Tour na een incident met Mark Cavendish in de sprint. De beslissing was zeer controversieel.", diff:2 },
   "HC083": { jaar:2014, cat:"Memorabel Moment", renner:"Vincenzo Nibali", nat:"🇮🇹 Italië", race:"Tour de France — favorieten uitgevallen", kort:"De leider van de Tour rijdt zijn concurrenten kapot terwijl favoriet na favoriet bezwijkt aan blessures", lang:"De Tour begon rampzalig: meerdere grote favorieten vielen al vroeg uit door blessures. Vincenzo Nibali profiteerde maximaal en won de koers overtuigend.", diff:2 },
+
+  "HC084": { jaar:1990, cat:"Grote Ronde", renner:"Greg LeMond", nat:"🇺🇸 VS", race:"Tour de France", kort:"De Amerikaan wint zijn derde Tour in een editie vol aanvallen en onverwachte koerswendingen", lang:"Na twee eerdere Tourzeges keerde de Amerikaan opnieuw terug als kampioen. In een Tour vol bergetappes verdedigde hij zijn leiderstrui geduldig, terwijl rivaal Claudio Chiappucci alles riskeerde. LeMond bleef kalm en behield zijn voorsprong tot Parijs.", diff:3 },
+  "HC085": { jaar:1992, cat:"Grote Ronde", renner:"Miguel Induráin", nat:"🇪🇸 Spanje", race:"Giro d'Italia", kort:"De Spanjaard wint zijn enige Giro en toont dat hij ook buiten de Tour onklopbaar is", lang:"Induráin was al de onbetwiste heerser van de Tour, maar de Giro was nog onontgonnen terrein. Met een genadeloos tijdrijden en stabiele bergprestaties veroverde hij de roze trui en bewees hij dat zijn dominantie verder reikte dan één enkele ronde.", diff:3 },
+  "HC086": { jaar:1993, cat:"Grote Ronde", renner:"Tony Rominger", nat:"🇨🇭 Zwitserland", race:"Vuelta a España", kort:"Zwitserse klimmer pakt zijn tweede opeenvolgende Vuelta in een dominante vertoning", lang:"De Zwitserse klimmer was op zijn best in de Spaanse bergen. Voor de tweede keer op rij won hij de Vuelta, keer op keer weg rijdend van zijn concurrenten in de zwaarste cols. Zijn tijdrijden maakte het plaatje compleet en liet zijn rivalen kansloos.", diff:3 },
+  "HC087": { jaar:1994, cat:"Grote Ronde", renner:"Eugeni Berzin", nat:"🇷🇺 Rusland", race:"Giro d'Italia", kort:"Jonge Rus verslaat de grote favoriet en pakt een verrassende Giro-zege", lang:"Niemand verwachtte dat de onbekende jonge Rus de Giro zou winnen. Toch klopte hij de grote favoriet met klimmend geweld en tijdrit. Zijn overwinning is een van de grootste verrassingen in de Giro-geschiedenis en bewees dat het peloton nooit voorspelbaar is.", diff:3 },
+  "HC088": { jaar:2009, cat:"Grote Ronde", renner:"Alberto Contador", nat:"🇪🇸 Spanje", race:"Giro d'Italia", kort:"Contador wint zijn enige Giro in een editie vol dramatische bergaankomsten", lang:"De Spanjaard had de Tour al op zijn naam staan, maar de Giro bleef uit zijn palmares. Na een intense strijd in de Dolomieten greep hij de roze trui en gaf die niet meer af. Het was zijn enige Giro-zege, maar hij domineerde de race van begin tot eind.", diff:3 },
+  "HC089": { jaar:2011, cat:"Grote Ronde", renner:"Juan José Cobo", nat:"🇪🇸 Spanje", race:"Vuelta a España", kort:"Cobo verslaat een opkomende Britse klant met amper dertien seconden verschil", lang:"In een van de spannendste Vueltas ooit greep de Spanjaard de eindzege met een haarsmalle marge. Zijn Britse concurrent leek op weg naar zijn eerste grote ronde, maar Cobo hield stand in de slottijdrit en won de Vuelta met een marge die in een normale tijdrit in minuten uitgedrukt werd.", diff:3 },
+  "HC090": { jaar:2016, cat:"Grote Ronde", renner:"Nairo Quintana", nat:"🇨🇴 Colombia", race:"Vuelta a España", kort:"Colombiaanse klimmer heerst in de Spaanse bergen en kroont een sterk seizoen", lang:"De Colombiaan was gemaakt voor de Spaanse bergen en dat bewees hij opnieuw. Met aanvallen op de zwaarste cols reed hij zijn concurrenten eruit en won hij de Vuelta overtuigend. Zijn klimmend vermogen leek grenzeloos op de Spaanse weg.", diff:2 },
+  "HC091": { jaar:2023, cat:"Grote Ronde", renner:"Sepp Kuss", nat:"🇺🇸 VS", race:"Vuelta a España", kort:"Amerikaan klopt zijn eigen ploegmaats en wint de Vuelta in een uniek ploegdrama", lang:"Drie kopmannen van dezelfde ploeg vochten om de eindzege in de Vuelta. Terwijl zijn ploegmaats strategisch terugtrokken, hield de Amerikaan stand aan de top van het klassement. In een beslissende bergetappe mocht hij eindelijk rijden voor zichzelf, en hij greep zijn kans met beide handen.", diff:2 },
+
+  "HC092": { jaar:1993, cat:"Klassiek", renner:"Gilbert Duclos-Lassalle", nat:"🇫🇷 Frankrijk", race:"Paris-Roubaix", kort:"Veteraan pakt zijn tweede Roubaix op rij en schrijft kassei-geschiedenis", lang:"Op een leeftijd dat de meeste klassieke renners al op hun retour zijn, won de Fransman voor de tweede keer op rij in de Stacade van Roubaix. Zijn doorzettingsvermogen op de kasseien en zijn ervaring in de hel van het Noorden maakten hem onklopbaar. Een prestatie die de annalen inging.", diff:3 },
+  "HC093": { jaar:1997, cat:"Klassiek", renner:"Frédéric Guesdon", nat:"🇫🇷 Frankrijk", race:"Paris-Roubaix", kort:"Relatief onbekende Fransman verrast iedereen met een solo-overwinning in de Stacade", lang:"In een Roubaix vol verrassingen ontsnapte de ploegmaat van een grotere favoriet uit een vroege groep. Niemand rekende hem als winnaar, maar de Fransman reed solo naar de finish en pakte een zege die velen nog steeds verbaast. Een van de grootste verrassingen in de rijke kassei-traditie.", diff:3 },
+  "HC094": { jaar:2001, cat:"Klassiek", renner:"Servais Knaven", nat:"🇳🇱 Nederland", race:"Paris-Roubaix", kort:"Nederlandse verrassing wint Roubaix met een stoutmoedige aanval op de kasseien", lang:"De Nederlander was de ploegassistent, niet de kopman. Maar in de hel van het Noorden sloeg hij zijn slag met een aanval ver voor de finish. Solo reed hij naar de Stacade en scoorde hij de grootste overwinning van zijn carrière, volledig ten koste van de verwachte favorieten.", diff:3 },
+  "HC095": { jaar:2004, cat:"Klassiek", renner:"Magnus Bäckstedt", nat:"🇸🇪 Zweden", race:"Paris-Roubaix", kort:"Grote Zweedse reus rijdt kassei-concurrenten kapot op een dag dat sterkte het haalt van tactiek", lang:"De lange en zware Zweed paste niet in het klassieke profiel van een Roubaix-winnaar, maar op zijn dag was hij niet te stuiten. Met brute kracht overleefde hij alle kasseisectoren en won hij solo in de Stacade — bewijs dat Roubaix ook door verrassende renners gewonnen kan worden.", diff:3 },
+  "HC096": { jaar:2002, cat:"Klassiek", renner:"Mario Cipollini", nat:"🇮🇹 Italië", race:"Milan-San Remo", kort:"De snelste sprinter van zijn generatie wint eindelijk zijn langverwachte Monument", lang:"De Italiaan had meer sprintzegen op zijn naam dan wie ook in zijn generatie, maar een Monument ontbrak nog. In de Primavera veranderde dat: zijn sprint op de Via Roma was een klasse apart en niemand kon hem bijhouden. De leeuwenkoning had zijn kroonstuk gewonnen.", diff:2 },
+  "HC097": { jaar:2009, cat:"Klassiek", renner:"Mark Cavendish", nat:"🇬🇧 Groot-Brittannië", race:"Milan-San Remo", kort:"Sprinter overleeft de Cipressa en Poggio en wint de Primavera in een klassieke sprint", lang:"Velen dachten dat de hellingen van de Cipressa en de Poggio hem eruit zouden rijden, maar de Brit had andere plannen. Hij overleefde beide klimmetjes, plaatste zich perfect in het wiel en explodeerde in de sprint op de Via Roma. Een historische overwinning die het beeld van de Primavera veranderde.", diff:2 },
+  "HC098": { jaar:2019, cat:"Klassiek", renner:"Philippe Gilbert", nat:"🇧🇪 België", race:"Paris-Roubaix", kort:"Belg wint de Koningin der Klassiekers na jaren van kassei-successen", lang:"De allrounder had al bijna alles gewonnen in het wielrennen, maar Roubaix ontbrak nog in zijn palmares. In een editie vol drama en kassei-chaos reed hij weg uit een select groepje en finishte solo in de legendarische Stacade. Een waardige kroon op een buitengewone klassieke carrière.", diff:2 },
+
+  "HC099": { jaar:1990, cat:"Wereldkampioenschap", renner:"Rudy Dhaenens", nat:"🇧🇪 België", race:"WK Wielrennen", kort:"Belg wint WK-goud in een race die zijn naam voor altijd verbindt aan tragedie en glorie", lang:"In een WK waar niemand hem als favoriet beschouwde, reed de Belg weg uit een kopgroep en wist hij de sprint te winnen. Het werd zijn grootste carrière-overwinning. Zijn vroege overlijden bij een verkeersongeval maakte van deze zege een emotionele herinnering in de Belgische wielergeschiedenis.", diff:3 },
+  "HC100": { jaar:1995, cat:"Wereldkampioenschap", renner:"Abraham Olano", nat:"🇪🇸 Spanje", race:"WK Wielrennen", kort:"Spanjaard pakt WK-goud in een finale vol strategische spanning", lang:"Het WK werd uitgevochten op een zwaar parcours in Colombia. De Spanjaard was sterk in de tijdrit en het klimmen en wist de overwinning naar zich toe te trekken in een finish waarbij zijn ploegmaat zich opofferde. Zijn WK-trui was het hoogtepunt van zijn carrière.", diff:3 },
+  "HC101": { jaar:1997, cat:"Wereldkampioenschap", renner:"Laurent Brochard", nat:"🇫🇷 Frankrijk", race:"WK Wielrennen", kort:"Relatief onbekende Fransman wint het WK en verrast het volledige peloton", lang:"Op een WK-parcours rond San Sebastián versloeg de Fransman alle topfavorieten. Zijn aanval in het slotgedeelte was verrassend en doeltreffend — niemand kon reageren. De overwinning was des te opmerkelijker omdat het zijn enige grote koersoverwinning bleef.", diff:3 },
+  "HC102": { jaar:2003, cat:"Wereldkampioenschap", renner:"Igor Astarloa", nat:"🇪🇸 Spanje", race:"WK Wielrennen", kort:"Spanjaard verrast in Hamilton in een van de grootste WK-uitkomsten ooit", lang:"Op een zwaar WK-parcours in Canada viel de relatief onbekende Spanjaard aan op de hellingen en reed hij solo weg uit een selecte groep. Zijn overwinning was compleet onverwacht en geldt als een van de grootste verrassingen in de WK-geschiedenis op de weg.", diff:3 },
+  "HC103": { jaar:2004, cat:"Wereldkampioenschap", renner:"Oscar Freire", nat:"🇪🇸 Spanje", race:"WK Wielrennen", kort:"Spanjaard wint zijn derde WK-titel en treedt toe tot de exclusiefste club in het wielrennen", lang:"Slechts een handvol renners heeft ooit drie wereldtitels op de weg gewonnen. De Spanjaard sloot zich aan bij dit elitegezelschap met een derde gouden trui, waarbij hij zijn explosieve sprint op het juiste moment inzette. Een prestatie die zijn status als klassieker bevestigde.", diff:3 },
+  "HC104": { jaar:2006, cat:"Wereldkampioenschap", renner:"Paolo Bettini", nat:"🇮🇹 Italië", race:"WK Wielrennen", kort:"Italiaan wint het WK in Salzburg na een seizoen dat door persoonlijk verdriet was getekend", lang:"Het WK-seizoen van de Italiaan stond in het teken van het overlijden van zijn broer. Met tranen in de ogen reed hij naar goud in Salzburg en droeg zijn overwinning op aan zijn broer. Het was een emotioneel moment dat het wielerpubliek wereldwijd raakte.", diff:2 },
+  "HC105": { jaar:2007, cat:"Wereldkampioenschap", renner:"Paolo Bettini", nat:"🇮🇹 Italië", race:"WK Wielrennen", kort:"Italiaan verdedigt zijn WK-titel in Stuttgart met een second klasse-optreden", lang:"Twee WK-titels op rij is uitzonderlijk, maar de Italiaan deed het. In Stuttgart controleerde hij de wedstrijd meesterlijk, sloeg op het juiste moment toe en wist niemand hem te volgen. Zijn dubbel bewees dat hij de beste klassieke renner van zijn generatie was.", diff:2 },
+  "HC106": { jaar:2010, cat:"Wereldkampioenschap", renner:"Thor Hushovd", nat:"🇳🇴 Noorwegen", race:"WK Wielrennen", kort:"Noor kroont een uitstekend seizoen met de regenboogtrui in Geelong", lang:"De Noor was in topvorm dat seizoen en dat bewees hij in Geelong. In een WK op een technisch parcours langs de Australische kust reed hij weg in de finale en won hij de sprint voor goud. Het was het hoogtepunt van een loopbaan die ook gekenmerkt werd door Tour-ritzeges en groene truien.", diff:2 },
+  "HC107": { jaar:2013, cat:"Wereldkampioenschap", renner:"Rui Costa", nat:"🇵🇹 Portugal", race:"WK Wielrennen", kort:"Portugees wint in Florence en bezorgt zijn land een zeldzame grote internationale zege", lang:"Op een WK-parcours in en rond Florence, met hellingen die klimmers beloonden, reed de Portugees weg uit een select groepje en won hij solo. Het was een van de weinige grote internationale overwinningen voor een Portugese renner en markeerde Costa's status als topklassieker.", diff:2 },
+  "HC108": { jaar:2014, cat:"Wereldkampioenschap", renner:"Michal Kwiatkowski", nat:"🇵🇱 Polen", race:"WK Wielrennen", kort:"Jonge Pool wint het WK in Ponferrada en zet zijn land op de wielrenkaart", lang:"De jonge Pool was klaar voor zijn doorbraak en die vond hij in Ponferrada. Op een technisch WK-parcours in Spanje reed hij weg uit een kleine kopgroep en pakte hij goud — de eerste WK-zege voor een Poolse renner op de weg. Het begin van een grote internationale carrière.", diff:2 },
+  "HC109": { jaar:2018, cat:"Wereldkampioenschap", renner:"Alejandro Valverde", nat:"🇪🇸 Spanje", race:"WK Wielrennen", kort:"Veteraan kroont een carrière van twee decennia met de regenboogtrui in Innsbruck", lang:"Na vele jaren van podiumplaatsen en bijna-missers pakte de Spanjaard op latere leeftijd eindelijk de regenboogtrui. Op de zware beklimmingen rond Innsbruck bewees hij dat ervaring het wint van jeugdig geweld. De tranen op zijn gezicht op het podium zeiden alles over de betekenis van deze overwinning.", diff:2 },
+
+  "HC110": { jaar:2007, cat:"Memorabel Moment", renner:"Michael Rasmussen", nat:"🇩🇰 Denemarken", race:"Tour de France — gedwongen opgave", kort:"Leider in de Tour wordt door zijn eigen ploeg uit de koers gehaald terwijl hij op weg is naar eindwinst", lang:"In een van de meest dramatische wendingen in de Tourgeschiedenis werd de Deense leider door zijn eigen ploeg verwijderd uit de koers. Dopingvermoedens en ontbrekende verblijfsgegevens lagen aan de basis. Terwijl hij de Tour domineerde in de bergen, verdween hij van de een op de andere dag uit het klassement.", diff:2 },
+  "HC111": { jaar:2012, cat:"Memorabel Moment", renner:"Ryder Hesjedal", nat:"🇨🇦 Canada", race:"Giro d'Italia", kort:"Eerste Canadees ooit wint een grote ronde in een Giro vol spanning tot de laatste dag", lang:"Canada kende nog nooit een winnaar van een grote ronde, totdat de renner van Garmin de Giro won in een spannende finale. Op de slotdag wist hij zijn kleine voorsprong te verdedigen en finishte hij als de eerste Noord-Amerikaan ooit die de Giro op zijn naam schreef.", diff:2 },
+  "HC112": { jaar:2022, cat:"Memorabel Moment", renner:"Biniam Girmay", nat:"🇪🇷 Eritrea", race:"Gent-Wevelgem", kort:"Eerste Sub-Saharaans Afrikaan wint een grote Europese wielerklassiek", lang:"De jonge Eritreër schreef wielrengeschiedenis door als eerste Sub-Saharaans Afrikaan een grote Europese klassiek te winnen. Zijn sprint aan de aankomst verraste iedereen, en zijn overwinning opende de deur voor een nieuwe generatie Afrikaanse wielrentalenten in het Europese peloton.", diff:1 },
+  "HC113": { jaar:2024, cat:"Memorabel Moment", renner:"Remco Evenepoel", nat:"🇧🇪 België", race:"Olympische Spelen Parijs", kort:"Belg wint goud in zowel de tijdrit als de wegrit op dezelfde Olympische Spelen", lang:"Op de Olympische Spelen deed de Belg iets wat slechts de absolute groten voor hem lukte: zowel de tijdrit als de wegrit winnen op dezelfde editie. Met een ongeziene tijdrit en een slimme koers in de wegrit schreef hij olympische wielrengeschiedenis. De gouden medailles waren het bewijs van zijn veelzijdigheid op het hoogste niveau.", diff:1 },
 };
 
 // ── RENDER ───────────────────────────────────────────────────────────────────
