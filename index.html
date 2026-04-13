@@ -7,21 +7,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
   <style>
     :root {
-      --yellow: #FFD700;
-      --pink:   #E8407A;
-      --red:    #D62828;
-      --blue:   #1A3A5C;
-      --green:  #2E7D32;
-      --purple: #6A1B9A;
-      --light:  #F5F5F5;
-      --card-bg:#FFFFFF;
+      --pink:    #FF2D78;
+      --cyan:    #00CCFF;
+      --card-bg: #111111;
+      --dark:    #0A0A0A;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0D1B2A;
+      background: var(--dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -33,34 +29,36 @@
     /* ── TOP BAR ── */
     .topbar {
       width: 100%;
-      background: var(--blue);
-      padding: 14px 20px;
+      background: #0D0D0D;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
-      border-bottom: 3px solid var(--yellow);
+      border-bottom: 1px solid rgba(255,45,120,0.35);
     }
+    .topbar img { height: 32px; width: 32px; border-radius: 6px; object-fit: cover; }
     .topbar .logo {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--yellow);
-      letter-spacing: -0.5px;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
     }
-    .topbar .logo span { color: #fff; }
+    .topbar .logo .h { color: var(--pink); text-shadow: 0 0 10px rgba(255,45,120,0.6); }
+    .topbar .logo .c { color: var(--cyan); text-shadow: 0 0 10px rgba(0,204,255,0.5); }
 
     /* ── CARD ── */
     .card {
       background: var(--card-bg);
-      border-radius: 20px;
-      margin: 24px 16px 0;
+      border: 1px solid rgba(255,45,120,0.4);
+      border-radius: 18px;
+      margin: 20px 16px 0;
       max-width: 480px;
       width: calc(100% - 32px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 0 28px rgba(255,45,120,0.12), 0 6px 24px rgba(0,0,0,0.7);
       overflow: hidden;
     }
 
     .card-header {
-      padding: 18px 22px 14px;
+      padding: 14px 18px 10px;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -71,58 +69,61 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.8px;
       padding: 5px 11px;
       border-radius: 20px;
       white-space: nowrap;
+      color: #fff;
     }
-    .badge.grote-ronde   { background: #D6E4F0; color: #1A3A5C; }
-    .badge.klassiek      { background: #D5F5E3; color: #1B5E20; }
-    .badge.wk            { background: #FCF3CF; color: #795600; }
-    .badge.memorabel     { background: #FADBD8; color: #922B21; }
+    .badge.grote-ronde { background: #1565C0; }
+    .badge.klassiek    { background: #1B6B2A; }
+    .badge.wk          { background: var(--pink); }
+    .badge.memorabel   { background: #C62828; }
 
     .card-id {
-      font-size: 0.7rem;
-      color: #aaa;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.25);
       font-weight: 600;
       padding-top: 4px;
       white-space: nowrap;
+      font-family: monospace;
     }
 
-    .card-body { padding: 0 22px 22px; }
+    .card-body { padding: 0 18px 18px; }
 
     .renner {
-      font-size: 1.35rem;
+      font-size: 1.55rem;
       font-weight: 800;
-      color: #111;
+      color: #fff;
       line-height: 1.2;
       margin-bottom: 4px;
     }
     .race {
-      font-size: 0.88rem;
-      color: #555;
-      font-weight: 600;
-      margin-bottom: 16px;
+      font-size: 0.92rem;
+      color: var(--cyan);
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 0 8px rgba(0,204,255,0.35);
     }
     .nat {
-      font-size: 0.88rem;
-      color: #777;
-      margin-bottom: 16px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
     }
 
     .divider {
       height: 1px;
-      background: #eee;
-      margin: 0 22px 18px;
+      background: rgba(255,255,255,0.08);
+      margin: 0 18px 16px;
     }
 
     .description {
       font-size: 1rem;
       line-height: 1.65;
-      color: #333;
+      color: rgba(255,255,255,0.8);
       margin-bottom: 20px;
     }
 
@@ -134,18 +135,19 @@
     .btn-reveal {
       width: 100%;
       padding: 16px;
-      background: var(--blue);
-      color: #fff;
+      background: transparent;
+      color: var(--pink);
       font-size: 1.05rem;
       font-weight: 700;
-      border: none;
+      border: 2px solid var(--pink);
       border-radius: 12px;
       cursor: pointer;
       letter-spacing: 0.3px;
       transition: background 0.2s, transform 0.1s;
+      text-shadow: 0 0 8px rgba(255,45,120,0.4);
     }
     .btn-reveal:active { transform: scale(0.97); }
-    .btn-reveal:hover  { background: #1e4a7a; }
+    .btn-reveal:hover  { background: rgba(255,45,120,0.1); }
 
     .year-display {
       display: none;
@@ -153,9 +155,11 @@
       align-items: center;
       gap: 6px;
       padding: 20px;
-      background: linear-gradient(135deg, var(--blue), #2a5298);
+      background: rgba(255,45,120,0.07);
+      border: 2px solid var(--pink);
       border-radius: 12px;
       animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 0 24px rgba(255,45,120,0.2);
     }
     .year-display.visible { display: flex; }
 
@@ -165,22 +169,22 @@
     }
 
     .year-label {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--yellow);
+      letter-spacing: 2px;
+      color: rgba(255,45,120,0.7);
     }
     .year-number {
       font-size: 4rem;
       font-weight: 900;
-      color: #fff;
+      color: var(--pink);
       line-height: 1;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      text-shadow: 0 0 30px rgba(255,45,120,0.5);
     }
     .year-sub {
       font-size: 0.82rem;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255,255,255,0.45);
       text-align: center;
     }
 
@@ -189,14 +193,14 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
     .diff-label {
-      font-size: 0.75rem;
-      color: #999;
-      font-weight: 600;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.3);
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
     .diff-dots {
       display: flex;
@@ -205,9 +209,9 @@
     .dot {
       width: 10px; height: 10px;
       border-radius: 50%;
-      background: #ddd;
+      background: rgba(255,255,255,0.15);
     }
-    .dot.filled { background: var(--yellow); }
+    .dot.filled { background: var(--pink); box-shadow: 0 0 6px rgba(255,45,120,0.7); }
 
     /* ── NOT FOUND ── */
     .not-found {
@@ -215,125 +219,37 @@
       text-align: center;
       padding: 60px 20px;
     }
-    .not-found h2 { font-size: 1.5rem; margin-bottom: 10px; color: var(--yellow); }
-    .not-found p  { color: #aaa; }
+    .not-found h2 { font-size: 1.5rem; margin-bottom: 10px; color: var(--pink); }
+    .not-found p  { color: rgba(255,255,255,0.4); }
 
     /* ── FOOTER ── */
     .footer {
       margin-top: 28px;
       text-align: center;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.2);
       font-size: 0.72rem;
     }
   </style>
   <style>
-    /* ── QR SCANNER OVERLAY ── */
-    .scanner-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 100;
-      flex-direction: column;
-    }
-    .scanner-overlay.active { display: flex; }
-
-    .scanner-video-wrap {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-    #qr-video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    #qr-canvas { display: none; }
-
-    .scanner-frame {
-      position: absolute;
-      width: 220px; height: 220px;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -58%);
-      pointer-events: none;
-    }
-    .sf-corner {
-      position: absolute;
-      width: 24px; height: 24px;
-      border-color: var(--yellow);
-      border-style: solid;
-      box-shadow: 0 0 6px rgba(255,215,0,.6);
-    }
-    .sf-corner.tl { top:0; left:0;   border-width:3px 0 0 3px; border-radius:3px 0 0 0; }
-    .sf-corner.tr { top:0; right:0;  border-width:3px 3px 0 0; border-radius:0 3px 0 0; }
-    .sf-corner.bl { bottom:0; left:0;  border-width:0 0 3px 3px; border-radius:0 0 0 3px; }
-    .sf-corner.br { bottom:0; right:0; border-width:0 3px 3px 0; border-radius:0 0 3px 0; }
-
-    .scanner-line {
-      position: absolute;
-      left: 8px; right: 8px; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
-      box-shadow: 0 0 6px var(--yellow);
-      animation: scanline 2s ease-in-out infinite;
-    }
-    @keyframes scanline {
-      0%   { top: 8px; }
-      100% { top: calc(100% - 10px); }
-    }
-
-    .scanner-hint {
-      position: absolute;
-      bottom: 20px; width: 100%;
-      text-align: center;
-      color: rgba(255,255,255,.7);
-      font-size: .88rem;
-      font-weight: 600;
-    }
-    .scanner-status {
-      position: absolute;
-      top: 20px; width: 100%;
-      text-align: center;
-      font-size: .82rem;
-      color: rgba(255,255,255,.5);
-      padding: 0 20px;
-    }
-
-    .scanner-footer {
-      background: #0D1B2A;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: center;
-    }
-    .btn-cancel {
-      padding: 12px 40px;
-      background: transparent;
-      color: rgba(255,255,255,.7);
-      border: 2px solid rgba(255,255,255,.25);
-      border-radius: 10px;
-      font-size: .95rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-cancel:active { opacity: .7; }
-
-    /* ── SCAN BUTTON (bottom of card page) ── */
+    /* ── SCAN BUTTON ── */
     .scan-next-btn {
       display: block;
       width: calc(100% - 32px);
       max-width: 480px;
       margin: 16px auto 8px;
       padding: 16px;
-      background: var(--blue);
-      color: #fff;
+      background: transparent;
+      color: var(--pink);
       font-size: 1rem;
       font-weight: 700;
-      border: none;
+      border: 2px solid var(--pink);
       border-radius: 12px;
       cursor: pointer;
       letter-spacing: .3px;
       transition: background .2s, transform .1s;
       text-align: center;
     }
-    .scan-next-btn:hover  { background: #1e4a7a; }
+    .scan-next-btn:hover  { background: rgba(255,45,120,0.1); }
     .scan-next-btn:active { transform: scale(.97); }
 
     .footer { margin-top: 12px; }
@@ -341,28 +257,12 @@
 </head>
 <body>
 
-<!-- QR SCANNER OVERLAY -->
-<div class="scanner-overlay" id="scanner-overlay">
-  <div class="scanner-video-wrap">
-    <video id="qr-video" playsinline muted></video>
-    <canvas id="qr-canvas"></canvas>
-    <div class="scanner-frame">
-      <div class="sf-corner tl"></div>
-      <div class="sf-corner tr"></div>
-      <div class="sf-corner bl"></div>
-      <div class="sf-corner br"></div>
-      <div class="scanner-line"></div>
-    </div>
-    <div class="scanner-hint">Richt de camera op een QR-code</div>
-    <div class="scanner-status" id="scan-status"></div>
-  </div>
-  <div class="scanner-footer">
-    <button class="btn-cancel" onclick="closeScanner()">✕ Annuleren</button>
-  </div>
-</div>
+<input type="file" id="qr-input" accept="image/*" capture="environment" style="display:none">
+<canvas id="qr-canvas" style="display:none"></canvas>
 
 <div class="topbar">
-  <div class="logo">🚴 Hitster <span>Cycling</span></div>
+  <img src="logo.png" alt="">
+  <div class="logo"><span class="h">HITSTER</span> <span class="c">CYCLING</span></div>
 </div>
 
 <div id="root"></div>
@@ -671,71 +571,35 @@ if (!m) {
   });
 }
 
-// ── QR SCANNER ───────────────────────────────────────────────────────────────
-const overlay  = document.getElementById('scanner-overlay');
-const video    = document.getElementById('qr-video');
-const canvas   = document.getElementById('qr-canvas');
-const ctx      = canvas.getContext('2d');
-const statusEl = document.getElementById('scan-status');
-let scanning   = false;
-let rafId      = null;
+// ── QR SCANNER (file input → jsQR) ───────────────────────────────────────────
+const qrInput  = document.getElementById('qr-input');
+const qrCanvas = document.getElementById('qr-canvas');
+const qrCtx    = qrCanvas.getContext('2d');
 
-async function openScanner() {
-  overlay.classList.add('active');
-  statusEl.textContent = '';
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    statusEl.textContent = 'Camera niet beschikbaar op dit apparaat.';
-    return;
-  }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' } }
-    });
-    video.srcObject = stream;
-    video.play().catch(() => {});
-    scanning = true;
-    rafId = requestAnimationFrame(tick);
-  } catch (e) {
-    statusEl.textContent = 'Geen toegang tot camera: ' + e.message;
-  }
+function openScanner() {
+  qrInput.value = '';   // allow re-selecting same file
+  qrInput.click();
 }
 
-function tick() {
-  if (!scanning) return;
-  if (video.readyState < 2 || !video.videoWidth) {
-    rafId = requestAnimationFrame(tick);
-    return;
-  }
-  // Scale to 640px wide for optimal jsQR detection
-  const W = 640;
-  const H = Math.round(video.videoHeight * W / video.videoWidth);
-  canvas.width = W; canvas.height = H;
-  ctx.drawImage(video, 0, 0, W, H);
-
-  const img  = ctx.getImageData(0, 0, W, H);
-  const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
-
-  if (code && code.data) {
-    stopScanner();
-    window.location.href = code.data;
-    return;
-  }
-  rafId = requestAnimationFrame(tick);
-}
-
-function stopScanner() {
-  scanning = false;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(t => t.stop());
-    video.srcObject = null;
-  }
-}
-
-function closeScanner() {
-  stopScanner();
-  overlay.classList.remove('active');
-}
+qrInput.addEventListener('change', function () {
+  const file = this.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = function () {
+    qrCanvas.width  = img.width;
+    qrCanvas.height = img.height;
+    qrCtx.drawImage(img, 0, 0);
+    const data = qrCtx.getImageData(0, 0, img.width, img.height);
+    const code = jsQR(data.data, data.width, data.height, { inversionAttempts: 'dontInvert' });
+    if (code && code.data) {
+      window.location.href = code.data;
+    } else {
+      alert('Geen QR-code herkend. Probeer opnieuw.');
+    }
+    URL.revokeObjectURL(img.src);
+  };
+  img.src = URL.createObjectURL(file);
+});
 </script>
 </body>
 </html>
