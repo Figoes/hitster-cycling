@@ -2,76 +2,74 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Hitster Cycling</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
   <style>
     :root {
-      --yellow: #FFD700;
-      --pink:   #E8407A;
-      --red:    #D62828;
-      --blue:   #1A3A5C;
-      --green:  #2E7D32;
-      --purple: #6A1B9A;
-      --light:  #F5F5F5;
-      --card-bg:#FFFFFF;
-      --neon-cyan: #00FFFF;
-      --neon-green: #00FF00;
+      --neon-yellow: #FFD700;
+      --neon-cyan:   #00FFFF;
+      --neon-pink:   #FF2D78;
+      --neon-blue:   #00AAFF;
+      --neon-green:  #00FF64;
+      --dark-bg:     #080E18;
+      --card-bg:     #0F1B2D;
+      --card-border: rgba(255,215,0,0.25);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body { width: 100%; height: 100%; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0D1B2A;
+      background: var(--dark-bg);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0;
-      overflow-x: hidden;
     }
 
     /* ── TOP BAR ── */
     .topbar {
       width: 100%;
-      background: var(--blue);
-      padding: 8px 16px;
+      background: rgba(15, 27, 45, 0.95);
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       gap: 10px;
-      border-bottom: 2px solid var(--yellow);
-      position: relative;
-      z-index: 10;
+      border-bottom: 2px solid var(--neon-yellow);
+      box-shadow: 0 2px 20px rgba(255,215,0,0.15);
       flex-shrink: 0;
+      z-index: 10;
     }
     .topbar .logo {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--yellow);
-      letter-spacing: -0.5px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--neon-yellow);
+      text-shadow: 0 0 12px rgba(255,215,0,0.6);
+      letter-spacing: 0.5px;
     }
-    .topbar .logo span { color: #fff; }
+    .topbar .logo span { color: #fff; text-shadow: none; }
 
     /* ── SCANNER VIEW ── */
     .scanner-container {
       flex: 1;
+      min-height: 0;
       width: 100%;
       display: flex;
       flex-direction: column;
-      background: #0D1B2A;
+      background: var(--dark-bg);
       position: relative;
-      overflow: hidden;
     }
 
-    .scanner-container.hidden {
-      display: none;
-    }
+    .scanner-container.hidden { display: none; }
 
     .video-wrapper {
       flex: 1;
+      min-height: 0;
       width: 100%;
       position: relative;
       background: #000;
@@ -87,50 +85,66 @@
       object-fit: cover;
     }
 
-    #scanner-canvas {
-      display: none;
-    }
+    #scanner-canvas { display: none; }
 
     .scan-frame {
       position: absolute;
-      width: 250px;
-      height: 250px;
-      border: 3px solid var(--neon-cyan);
+      width: 240px;
+      height: 240px;
+      border: 3px solid var(--neon-yellow);
       border-radius: 10px;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px rgba(0, 255, 255, 0.2);
+      transform: translate(-50%, -55%);
+      box-shadow: 0 0 20px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.1);
       animation: pulse-frame 1.5s ease-in-out infinite;
       pointer-events: none;
     }
+    /* Corner accents */
+    .scan-frame::before, .scan-frame::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: var(--neon-yellow);
+      border-style: solid;
+    }
+    .scan-frame::before {
+      top: -3px; left: -3px;
+      border-width: 4px 0 0 4px;
+      border-radius: 4px 0 0 0;
+    }
+    .scan-frame::after {
+      bottom: -3px; right: -3px;
+      border-width: 0 4px 4px 0;
+      border-radius: 0 0 4px 0;
+    }
 
     @keyframes pulse-frame {
-      0%, 100% { box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px rgba(0, 255, 255, 0.2); }
-      50% { box-shadow: 0 0 30px var(--neon-cyan), inset 0 0 30px rgba(0, 255, 255, 0.4); }
+      0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.1); }
+      50%       { box-shadow: 0 0 35px rgba(255,215,0,0.8), inset 0 0 30px rgba(255,215,0,0.2); }
     }
 
     .dark-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle 125px at center, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(ellipse 120px 120px at 50% 45%, transparent 0%, rgba(0,0,0,0.65) 100%);
       pointer-events: none;
     }
 
     .scanner-text {
       position: absolute;
-      bottom: 60px;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 600;
+      color: var(--neon-yellow);
+      font-size: 0.95rem;
+      font-weight: 700;
       text-align: center;
-      z-index: 5;
+      text-shadow: 0 0 8px rgba(255,215,0,0.5);
       white-space: nowrap;
+      letter-spacing: 0.5px;
     }
 
     .scanner-fallback {
@@ -143,18 +157,13 @@
       color: #fff;
       text-align: center;
     }
-
     .scanner-fallback h3 {
       font-size: 1.2rem;
       margin-bottom: 16px;
-      color: var(--yellow);
+      color: var(--neon-yellow);
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
     }
-
-    .scanner-fallback p {
-      color: #aaa;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+    .scanner-fallback p { color: rgba(255,255,255,0.5); margin-bottom: 24px; line-height: 1.5; }
 
     .url-input-group {
       width: 100%;
@@ -162,34 +171,24 @@
       display: flex;
       gap: 8px;
     }
-
     .url-input-group input {
       flex: 1;
       padding: 10px;
-      border: 2px solid var(--yellow);
+      border: 2px solid var(--neon-yellow);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,215,0,0.05);
       color: #fff;
       font-size: 0.9rem;
     }
-
-    .url-input-group input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
+    .url-input-group input::placeholder { color: rgba(255,255,255,0.35); }
     .url-input-group button {
       padding: 10px 16px;
-      background: var(--yellow);
+      background: var(--neon-yellow);
       color: #000;
       border: none;
       border-radius: 8px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .url-input-group button:hover {
-      background: #FFE700;
     }
 
     /* ── CARD VIEW ── */
@@ -197,94 +196,94 @@
       flex: 1;
       min-height: 0;
       width: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 0 0 20px;
+      padding-bottom: 24px;
     }
-
-    .card-container.hidden {
-      display: none;
-    }
+    .card-container.hidden { display: none; }
 
     /* ── CARD ── */
     .card {
       background: var(--card-bg);
-      border-radius: 20px;
-      margin: 12px 16px 0;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      margin: 14px 16px 0;
       max-width: 480px;
       width: calc(100% - 32px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 0 30px rgba(255,215,0,0.07), 0 8px 32px rgba(0,0,0,0.6);
       overflow: hidden;
     }
 
     .card-header {
-      padding: 10px 16px 6px;
+      padding: 12px 16px 8px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 10px;
+      border-bottom: 1px solid rgba(255,215,0,0.1);
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.8px;
       padding: 5px 11px;
       border-radius: 20px;
+      border: 1px solid;
       white-space: nowrap;
     }
-    .badge.grote-ronde   { background: #D6E4F0; color: #1A3A5C; }
-    .badge.klassiek      { background: #D5F5E3; color: #1B5E20; }
-    .badge.wk            { background: #FCF3CF; color: #795600; }
-    .badge.memorabel     { background: #FADBD8; color: #922B21; }
+    .badge.grote-ronde { background: rgba(0,170,255,0.12); color: #00AAFF; border-color: rgba(0,170,255,0.4); }
+    .badge.klassiek    { background: rgba(0,255,100,0.12); color: #00FF64; border-color: rgba(0,255,100,0.4); }
+    .badge.wk          { background: rgba(255,215,0,0.12); color: #FFD700; border-color: rgba(255,215,0,0.4); }
+    .badge.memorabel   { background: rgba(255,45,120,0.12); color: #FF2D78; border-color: rgba(255,45,120,0.4); }
 
     .card-id {
-      font-size: 0.7rem;
-      color: #aaa;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.3);
       font-weight: 600;
-      padding-top: 4px;
       white-space: nowrap;
+      font-family: monospace;
     }
 
-    .card-body { padding: 0 16px 14px; }
+    .card-body { padding: 12px 16px; }
 
     .renner {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
-      color: #111;
+      color: #fff;
       line-height: 1.2;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
+      text-shadow: 0 0 8px rgba(255,215,0,0.2);
     }
     .race {
-      font-size: 0.80rem;
-      color: #555;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
       font-weight: 600;
       margin-bottom: 2px;
     }
     .nat {
-      font-size: 0.80rem;
-      color: #999;
-      margin-bottom: 8px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 10px;
     }
 
     .divider {
       height: 1px;
-      background: #eee;
-      margin: 0 16px 12px;
+      background: rgba(255,215,0,0.1);
+      margin: 0 16px;
     }
 
     .description {
-      font-size: 0.92rem;
-      line-height: 1.6;
-      color: #333;
+      font-size: 0.91rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.75);
       margin-bottom: 16px;
     }
 
@@ -296,44 +295,39 @@
       margin-bottom: 10px;
     }
     .diff-label {
-      font-size: 0.75rem;
-      color: #999;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.4);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .diff-dots {
-      display: flex;
-      gap: 4px;
-    }
-    .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: #ddd;
-    }
-    .dot.filled { background: var(--yellow); }
+    .diff-dots { display: flex; gap: 4px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+    .dot.filled { background: var(--neon-yellow); box-shadow: 0 0 6px rgba(255,215,0,0.7); }
 
     /* ── YEAR REVEAL ── */
-    .reveal-wrap {
-      margin-top: 4px;
-      margin-bottom: 16px;
-    }
+    .reveal-wrap { margin-bottom: 12px; }
 
     .btn-reveal {
       width: 100%;
-      padding: 16px;
-      background: var(--blue);
-      color: #fff;
-      font-size: 1.05rem;
+      padding: 15px;
+      background: rgba(255,215,0,0.08);
+      color: var(--neon-yellow);
+      font-size: 1rem;
       font-weight: 700;
-      border: none;
+      border: 2px solid rgba(255,215,0,0.35);
       border-radius: 12px;
       cursor: pointer;
       letter-spacing: 0.3px;
-      transition: background 0.2s, transform 0.1s;
+      transition: all 0.2s;
+      text-shadow: 0 0 8px rgba(255,215,0,0.4);
+    }
+    .btn-reveal:hover {
+      background: rgba(255,215,0,0.15);
+      border-color: var(--neon-yellow);
+      box-shadow: 0 0 20px rgba(255,215,0,0.25);
     }
     .btn-reveal:active { transform: scale(0.97); }
-    .btn-reveal:hover  { background: #1e4a7a; }
 
     .year-display {
       display: none;
@@ -341,9 +335,11 @@
       align-items: center;
       gap: 6px;
       padding: 20px;
-      background: linear-gradient(135deg, var(--blue), #2a5298);
+      background: rgba(255,215,0,0.05);
+      border: 2px solid rgba(255,215,0,0.35);
       border-radius: 12px;
       animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 0 30px rgba(255,215,0,0.15);
     }
     .year-display.visible { display: flex; }
 
@@ -353,65 +349,53 @@
     }
 
     .year-label {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--yellow);
+      letter-spacing: 2px;
+      color: rgba(255,215,0,0.7);
     }
     .year-number {
-      font-size: 4rem;
+      font-size: 4.5rem;
       font-weight: 900;
-      color: #fff;
+      color: var(--neon-yellow);
       line-height: 1;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      text-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3);
     }
     .year-sub {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.7);
+      font-size: 0.80rem;
+      color: rgba(255,255,255,0.5);
       text-align: center;
     }
 
-    /* ── SCAN NEXT CARD BUTTON ── */
+    /* ── SCAN NEXT BUTTON ── */
     .btn-scan-next {
       width: calc(100% - 32px);
       max-width: 480px;
-      padding: 16px;
-      margin: 0 16px 20px;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
-      color: #000;
-      font-size: 1.1rem;
+      padding: 15px;
+      margin: 10px 16px 0;
+      background: rgba(255,215,0,0.1);
+      color: var(--neon-yellow);
+      font-size: 1rem;
       font-weight: 700;
-      border: none;
+      border: 2px solid var(--neon-yellow);
       border-radius: 12px;
       cursor: pointer;
       letter-spacing: 0.3px;
-      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      transition: all 0.2s;
+      box-shadow: 0 0 15px rgba(255,215,0,0.15);
+      text-shadow: 0 0 8px rgba(255,215,0,0.4);
     }
     .btn-scan-next:hover {
-      background: linear-gradient(135deg, #00EEFF, #00FF7F);
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+      background: rgba(255,215,0,0.18);
+      box-shadow: 0 0 25px rgba(255,215,0,0.35);
     }
     .btn-scan-next:active { transform: scale(0.97); }
 
     /* ── NOT FOUND ── */
-    .not-found {
-      color: #fff;
-      text-align: center;
-      padding: 60px 20px;
-    }
-    .not-found h2 { font-size: 1.5rem; margin-bottom: 10px; color: var(--yellow); }
-    .not-found p  { color: #aaa; }
-
-    /* ── FOOTER ── */
-    .footer {
-      margin-top: 28px;
-      text-align: center;
-      color: rgba(255,255,255,0.3);
-      font-size: 0.72rem;
-      flex-shrink: 0;
-    }
+    .not-found { color: #fff; text-align: center; padding: 60px 20px; }
+    .not-found h2 { font-size: 1.5rem; margin-bottom: 10px; color: var(--neon-yellow); }
+    .not-found p  { color: rgba(255,255,255,0.4); }
   </style>
 </head>
 <body>
@@ -420,17 +404,17 @@
   <div class="logo">🚴 Hitster <span>Cycling</span></div>
 </div>
 
-<div class="scanner-container" id="scanner-container">
+<div class="scanner-container" id="scanner-container" style="display:none;">
   <div class="video-wrapper" id="video-wrapper">
-    <video id="scanner-video" playsinline></video>
+    <video id="scanner-video" playsinline muted></video>
     <canvas id="scanner-canvas"></canvas>
     <div class="dark-overlay"></div>
     <div class="scan-frame"></div>
-    <div class="scanner-text">Richt de camera op een kaart</div>
+    <div class="scanner-text">📷 Richt de camera op een kaart</div>
   </div>
   <div class="scanner-fallback" id="scanner-fallback" style="display: none;">
     <h3>Camera niet beschikbaar</h3>
-    <p>Voer handmatig een geldige Hitster Cycling URL in:</p>
+    <p>Voer handmatig een kaart-ID in:</p>
     <div class="url-input-group">
       <input type="text" id="url-input" placeholder="HC001, HC002, ..." />
       <button onclick="navigateToCard()">Ga</button>
@@ -438,7 +422,7 @@
   </div>
 </div>
 
-<div class="card-container" id="card-container" style="display: none;"></div>
+<div class="card-container" id="card-container" style="display:none;"></div>
 
 <script>
 // ── DATASET ─────────────────────────────────────────────────────────────────
@@ -670,6 +654,7 @@ const MOMENTEN = {
   "HC113": { jaar:2024, cat:"Memorabel", renner:"Remco Evenepoel", nat:"🇧🇪 België", race:"Olympische Spelen (Dubbel), road race en tijdrit", kort:"Een jong talent wint beide gouden medailles op de Olympische Spelen", lang:"Remco Evenepoel schreef in 2024 wielergeschiedenis door zowel goud te winnen in de wegwedstrijd als de tijdrit op de Olympische Spelen. Dit was een monumentale dubbel die zeer weinig renners hebben kunnen bereiken. Met zijn titanische kracht en veelzijdig vermogen domineerde Evenepoel beide olympische wedstrijden. Deze dubbel plaatste Evenepoel permanent under de allergrootsten en toonde waarom hij de meest complete renner van zijn generatie is.", diff:2 }
 };
 
+
 // ── UTILITY FUNCTIONS ────────────────────────────────────────────────────────
 function catClass(cat) {
   const map = {
@@ -694,65 +679,79 @@ function catIcon(cat) {
 function dots(n) {
   let html = "";
   for (let i = 0; i < 3; i++) {
-    const cls = i < n ? "dot filled" : "dot";
-    html += `<div class="${cls}"></div>`;
+    html += `<div class="${i < n ? 'dot filled' : 'dot'}"></div>`;
   }
   return html;
 }
 
 // ── SCANNER LOGIC ────────────────────────────────────────────────────────────
 let scanning = false;
-const video = document.getElementById('scanner-video');
-const canvas = document.getElementById('scanner-canvas');
-const ctx = canvas.getContext('2d');
-const container = document.getElementById('scanner-container');
-const cardContainer = document.getElementById('card-container');
-const fallback = document.getElementById('scanner-fallback');
+const video   = document.getElementById('scanner-video');
+const canvas  = document.getElementById('scanner-canvas');
+const ctx     = canvas.getContext('2d');
+const scannerContainer = document.getElementById('scanner-container');
+const cardContainer    = document.getElementById('card-container');
+const fallback         = document.getElementById('scanner-fallback');
+const videoWrapper     = document.getElementById('video-wrapper');
 
 async function startScanner() {
+  scannerContainer.style.display = 'flex';
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' }
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
     });
     video.srcObject = stream;
-    video.onloadedmetadata = () => {
-      video.play();
-      scanning = true;
-      requestAnimationFrame(tick);
-    };
+    video.setAttribute('playsinline', true);
+    await video.play();
+    scanning = true;
+    requestAnimationFrame(tick);
   } catch (err) {
-    console.log('Camera not available:', err);
+    console.warn('Camera error:', err);
+    videoWrapper.style.display = 'none';
     fallback.style.display = 'flex';
   }
-}
-
-function tick() {
-  if (video.readyState === video.HAVE_ENOUGH_DATA) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
-    if (code && code.data.includes('hitster-cycling')) {
-      stopScanner();
-      window.location.href = code.data;
-      return;
-    }
-  }
-  if (scanning) requestAnimationFrame(tick);
 }
 
 function stopScanner() {
   scanning = false;
   if (video.srcObject) {
     video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
   }
+}
+
+function tick() {
+  if (!scanning) return;
+  if (video.readyState >= 2 && video.videoWidth > 0) {
+    canvas.width  = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: "dontInvert"
+    });
+    if (code && code.data) {
+      const d = code.data;
+      // Match ?id=HC001 pattern or bare HC001
+      const match = d.match(/[?&]id=(HC\d{3})/i) || d.match(/\b(HC\d{3})\b/i);
+      if (match || d.includes('hitster-cycling')) {
+        stopScanner();
+        if (match) {
+          window.location.href = window.location.origin + window.location.pathname + '?id=' + match[1].toUpperCase();
+        } else {
+          window.location.href = d;
+        }
+        return;
+      }
+    }
+  }
+  requestAnimationFrame(tick);
 }
 
 function navigateToCard() {
   const input = document.getElementById('url-input').value.trim().toUpperCase();
   if (MOMENTEN[input]) {
-    window.location.href = `?id=${input}`;
+    window.location.href = '?id=' + input;
   } else {
     alert('Ongeldig kaartje ID. Probeer HC001, HC002, etc.');
   }
@@ -761,22 +760,19 @@ function navigateToCard() {
 // ── ROUTE LOGIC ──────────────────────────────────────────────────────────────
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
-const m = MOMENTEN[id];
-
-const root = document.getElementById('root');
+const m  = MOMENTEN[id];
 
 if (!id || !m) {
   // Show scanner
-  container.style.display = 'flex';
   cardContainer.style.display = 'none';
   startScanner();
 } else {
   // Show card
-  container.style.display = 'none';
+  scannerContainer.style.display = 'none';
   cardContainer.style.display = 'flex';
 
   const badgeClass = catClass(m.cat);
-  const badgeIcon = catIcon(m.cat);
+  const badgeIcon  = catIcon(m.cat);
 
   cardContainer.innerHTML = `
     <div class="card">
@@ -805,8 +801,8 @@ if (!id || !m) {
           </div>
         </div>
       </div>
-      <button class="btn-scan-next" onclick="window.location.href = '?'">📷 Scan volgend kaartje</button>
-    </div>`;
+    </div>
+    <button class="btn-scan-next" onclick="window.location.href='?'">📷 Scan volgend kaartje</button>`;
 
   document.getElementById('btn').addEventListener('click', () => {
     document.getElementById('btn').style.display = 'none';
