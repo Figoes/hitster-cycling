@@ -6,13 +6,20 @@
   <title>Hitster Cycling</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
   <style>
+    /* ── LOGO PALETTE ──
+       Hot pink : #FF2D78   (HITSTER text)
+       Cyan     : #00CCFF   (bicycle frame)
+       Yellow   : #FFE500   (wheels / outer arc)
+       Orange   : #FF7700   (inner arc)
+       Bg       : #000000
+    */
     :root {
-      --pink:    #FF2D78;
-      --cyan:    #00AAFF;
-      --dark:    #0A0A0A;
-      --card:    #111111;
-      --text:    #FFFFFF;
-      --muted:   rgba(255,255,255,0.45);
+      --pink:   #FF2D78;
+      --cyan:   #00CCFF;
+      --yellow: #FFE500;
+      --orange: #FF7700;
+      --card:   #0D0D0D;
+      --muted:  rgba(255,255,255,0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,6 +28,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      background: #000;
     }
     @supports (height: 100dvh) {
       html, body { height: 100dvh; }
@@ -28,7 +36,6 @@
 
     body {
       font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
-      background: var(--dark);
       display: flex;
       flex-direction: column;
     }
@@ -36,21 +43,29 @@
     /* ── TOP BAR ── */
     .topbar {
       width: 100%;
-      padding: 10px 16px 9px;
+      padding: 8px 16px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,45,120,0.3);
       flex-shrink: 0;
+      background: rgba(0,0,0,0.9);
     }
-    .logo {
+    .topbar img {
+      height: 34px;
+      width: 34px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+    .topbar-title {
       font-size: 1rem;
-      font-weight: 800;
-      color: var(--pink);
+      font-weight: 900;
       letter-spacing: 0.5px;
     }
-    .logo span { color: rgba(255,255,255,0.85); }
+    .topbar-title .h { color: var(--pink); text-shadow: 0 0 10px rgba(255,45,120,0.7); }
+    .topbar-title .c { color: var(--cyan); text-shadow: 0 0 10px rgba(0,204,255,0.6); }
 
-    /* ── SCANNER VIEW ── */
+    /* ── SCANNER ── */
     .scanner-container {
       flex: 1;
       min-height: 0;
@@ -68,65 +83,78 @@
       overflow: hidden;
     }
 
-    #scanner-video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    #scanner-video { width: 100%; height: 100%; object-fit: cover; }
     #scanner-canvas { display: none; }
 
     .scan-frame {
       position: absolute;
-      width: 230px;
-      height: 230px;
+      width: 220px;
+      height: 220px;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -56%);
+      transform: translate(-50%, -58%);
       pointer-events: none;
     }
-    /* Corner-only border */
     .corner {
       position: absolute;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-color: var(--pink);
       border-style: solid;
+      box-shadow: 0 0 8px var(--pink);
     }
-    .corner.tl { top: 0; left: 0;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
-    .corner.tr { top: 0; right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
-    .corner.bl { bottom: 0; left: 0;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
-    .corner.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+    .corner.tl { top:0; left:0;   border-width:3px 0 0 3px; border-radius:4px 0 0 0; }
+    .corner.tr { top:0; right:0;  border-width:3px 3px 0 0; border-radius:0 4px 0 0; }
+    .corner.bl { bottom:0; left:0;  border-width:0 0 3px 3px; border-radius:0 0 0 4px; }
+    .corner.br { bottom:0; right:0; border-width:0 3px 3px 0; border-radius:0 0 4px 0; }
 
     .scan-line {
       position: absolute;
-      left: 10px; right: 10px;
+      left: 8px; right: 8px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--pink), transparent);
-      animation: scan-move 2s linear infinite;
+      background: linear-gradient(90deg, transparent, var(--pink), var(--cyan), transparent);
       box-shadow: 0 0 8px var(--pink);
+      animation: scanmove 2s ease-in-out infinite;
     }
-    @keyframes scan-move {
-      0%   { top: 10px; }
-      50%  { top: calc(100% - 12px); }
-      100% { top: 10px; }
+    @keyframes scanmove {
+      0%   { top: 8px; opacity: 0.6; }
+      50%  { opacity: 1; }
+      100% { top: calc(100% - 10px); opacity: 0.6; }
     }
 
-    .dark-overlay {
+    .scan-overlay {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(ellipse 115px 115px at 50% 44%, transparent 0%, rgba(0,0,0,0.6) 100%);
+      background: radial-gradient(ellipse 110px 110px at 50% 42%, transparent 0%, rgba(0,0,0,0.55) 100%);
       pointer-events: none;
     }
 
-    .scanner-text {
+    .scan-logo {
       position: absolute;
-      bottom: 20px;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      object-fit: cover;
+      opacity: 0.9;
+    }
+
+    .scan-status {
+      position: absolute;
+      bottom: 18px;
       width: 100%;
       text-align: center;
-      color: rgba(255,255,255,0.7);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 600;
       letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.65);
+      padding: 0 20px;
+    }
+    .scan-status.found {
+      color: var(--cyan);
+      text-shadow: 0 0 10px var(--cyan);
     }
 
     .scanner-fallback {
@@ -139,14 +167,14 @@
       text-align: center;
     }
     .scanner-fallback h3 { color: var(--pink); font-size: 1.1rem; margin-bottom: 14px; }
-    .scanner-fallback p  { color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+    .scanner-fallback p  { color: var(--muted); line-height: 1.5; margin-bottom: 20px; font-size: 0.9rem; }
 
     .url-input-group { display: flex; gap: 8px; width: 100%; max-width: 300px; }
     .url-input-group input {
       flex: 1; padding: 10px;
-      border: 1px solid rgba(255,45,120,0.4);
+      border: 1px solid rgba(255,45,120,0.5);
       border-radius: 8px;
-      background: rgba(255,45,120,0.05);
+      background: rgba(255,45,120,0.06);
       color: #fff; font-size: 0.9rem;
     }
     .url-input-group input::placeholder { color: var(--muted); }
@@ -155,6 +183,7 @@
       background: var(--pink); color: #fff;
       border: none; border-radius: 8px;
       font-weight: 700; cursor: pointer;
+      font-size: 0.9rem;
     }
 
     /* ── CARD CONTAINER ── */
@@ -168,198 +197,197 @@
       display: none;
       flex-direction: column;
       align-items: center;
-      padding: 14px 16px 28px;
+      padding: 12px 14px 32px;
+      gap: 0;
     }
 
     /* ── CARD ── */
     .card {
       background: var(--card);
-      border: 1px solid rgba(255, 45, 120, 0.45);
+      border: 1px solid rgba(255,45,120,0.4);
       border-radius: 18px;
       width: 100%;
       max-width: 460px;
-      box-shadow: 0 0 28px rgba(255,45,120,0.12), 0 4px 20px rgba(0,0,0,0.6);
+      box-shadow:
+        0 0 0 1px rgba(0,204,255,0.06),
+        0 0 24px rgba(255,45,120,0.15),
+        0 6px 24px rgba(0,0,0,0.7);
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px 10px;
+      padding: 11px 14px 9px;
     }
 
+    /* Badge colors from logo arcs */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 0.68rem;
-      font-weight: 700;
+      font-size: 0.66rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 5px 12px;
+      letter-spacing: 0.9px;
+      padding: 5px 11px;
       border-radius: 20px;
-      color: #fff;
+      color: #000;
     }
-    .badge.grote-ronde { background: #1565C0; }
-    .badge.klassiek    { background: #1B6B2A; }
-    .badge.wk          { background: #6A1B9A; }
-    .badge.memorabel   { background: #C62828; }
+    .badge.grote-ronde { background: var(--cyan);   color: #000; }
+    .badge.klassiek    { background: var(--yellow);  color: #000; }
+    .badge.wk          { background: var(--pink);    color: #fff; }
+    .badge.memorabel   { background: var(--orange);  color: #000; }
 
     .card-id {
-      font-size: 0.62rem;
-      color: rgba(255,255,255,0.25);
+      font-size: 0.60rem;
+      color: rgba(255,255,255,0.2);
       font-family: monospace;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
 
-    .card-body { padding: 2px 14px 12px; }
+    .card-body { padding: 0 14px 12px; }
 
     .renner {
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 800;
       color: #fff;
       line-height: 1.15;
       margin-bottom: 3px;
     }
     .nat {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.55);
+      font-size: 0.80rem;
+      color: rgba(255,255,255,0.5);
       margin-bottom: 3px;
     }
     .race {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0,204,255,0.4);
       margin-bottom: 8px;
     }
     .diff-row {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-bottom: 2px;
     }
     .diff-label {
-      font-size: 0.62rem;
+      font-size: 0.60rem;
       font-weight: 700;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.25);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
     }
     .diff-dots { display: flex; gap: 5px; }
-    .dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-    }
-    .dot.filled {
-      background: var(--pink);
-      box-shadow: 0 0 5px rgba(255,45,120,0.7);
-    }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+    .dot.filled { background: var(--pink); box-shadow: 0 0 6px rgba(255,45,120,0.8); }
 
     .divider {
       height: 1px;
       background: rgba(255,255,255,0.07);
-      margin: 0 14px 12px;
+      margin: 0 14px 11px;
     }
 
     .description {
-      font-size: 0.92rem;
-      line-height: 1.6;
-      color: rgba(255,255,255,0.8);
+      font-size: 0.91rem;
+      line-height: 1.62;
+      color: rgba(255,255,255,0.75);
       margin-bottom: 14px;
     }
 
     /* ── YEAR REVEAL ── */
     .btn-reveal {
       width: 100%;
-      padding: 14px;
+      padding: 13px;
       background: transparent;
       color: var(--pink);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       border: 2px solid var(--pink);
       border-radius: 12px;
       cursor: pointer;
       letter-spacing: 0.3px;
       transition: all 0.2s;
+      text-shadow: 0 0 8px rgba(255,45,120,0.5);
     }
+    .btn-reveal:hover { background: rgba(255,45,120,0.1); box-shadow: 0 0 18px rgba(255,45,120,0.3); }
     .btn-reveal:active { transform: scale(0.97); }
-    .btn-reveal:hover {
-      background: rgba(255,45,120,0.1);
-      box-shadow: 0 0 16px rgba(255,45,120,0.3);
-    }
 
     .year-display {
       display: none;
       flex-direction: column;
       align-items: center;
       gap: 2px;
-      padding: 14px 14px 10px;
+      padding: 12px 14px 10px;
       border: 2px solid var(--pink);
       border-radius: 12px;
       background: rgba(255,45,120,0.06);
+      box-shadow: 0 0 20px rgba(255,45,120,0.15);
       animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
     .year-display.visible { display: flex; }
 
     @keyframes popIn {
-      from { transform: scale(0.75); opacity: 0; }
+      from { transform: scale(0.7); opacity: 0; }
       to   { transform: scale(1);   opacity: 1; }
     }
 
     .year-label {
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255,45,120,0.7);
+      letter-spacing: 2.5px;
+      color: rgba(255,45,120,0.6);
     }
     .year-number {
-      font-size: 3.6rem;
+      font-size: 3.8rem;
       font-weight: 900;
       color: var(--pink);
       line-height: 1;
-      text-shadow: 0 0 25px rgba(255,45,120,0.5);
+      text-shadow: 0 0 30px rgba(255,45,120,0.6);
     }
     .year-sub {
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       color: var(--muted);
-      text-align: center;
     }
 
     /* ── SCAN NEXT ── */
     .btn-scan-next {
       width: 100%;
       max-width: 460px;
-      padding: 14px;
+      padding: 13px;
       background: transparent;
-      color: rgba(255,255,255,0.6);
-      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.88rem;
       font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-scan-next:hover {
-      border-color: rgba(255,255,255,0.35);
-      color: rgba(255,255,255,0.9);
-    }
+    .btn-scan-next:hover { border-color: rgba(255,45,120,0.4); color: var(--pink); }
     .btn-scan-next:active { transform: scale(0.97); }
   </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="logo">🚴 Hitster <span>Cycling</span></div>
+  <img src="logo.png" alt="Hitster Cycling" />
+  <div class="topbar-title">
+    <span class="h">HITSTER</span>&nbsp;<span class="c">CYCLING</span>
+  </div>
 </div>
 
 <div class="scanner-container" id="scanner-container">
   <div class="video-wrapper" id="video-wrapper">
     <video id="scanner-video" playsinline muted></video>
     <canvas id="scanner-canvas"></canvas>
-    <div class="dark-overlay"></div>
+    <div class="scan-overlay"></div>
+    <img src="logo.png" class="scan-logo" alt="" />
     <div class="scan-frame">
       <div class="corner tl"></div>
       <div class="corner tr"></div>
@@ -367,7 +395,7 @@
       <div class="corner br"></div>
       <div class="scan-line"></div>
     </div>
-    <div class="scanner-text">Richt op de QR-code van een kaart</div>
+    <div class="scan-status" id="scan-status">Richt op de QR-code van een kaart</div>
   </div>
   <div class="scanner-fallback" id="scanner-fallback" style="display:none;">
     <h3>Camera niet beschikbaar</h3>
@@ -382,7 +410,7 @@
 <div class="card-container" id="card-container"></div>
 
 <script>
-// ── DATASET ─────────────────────────────────────────────────────────────────
+// ── DATASET ──────────────────────────────────────────────────────────────────
 const MOMENTEN = {
   "HC001": { jaar:1991, cat:"Grote Ronde", renner:"Miguel Induráin", nat:"🇪🇸 Spanje", race:"Tour de France", kort:"Een Spaans klimmer domineert het peloton en rijdt solo naar zijn eerste grote overwinning", lang:"Miguel Induráin schreef geschiedenis door de Tour de France 1991 te winnen, zijn eerste van vijf opeenvolgende zeges. Met zijn krachtige zeitritkunsten en bergvaardigheid domineerde hij het peloton volledig.", diff:1 },
 
@@ -612,63 +640,90 @@ const MOMENTEN = {
 };
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
-function catClass(c) {
-  return {"Grote Ronde":"grote-ronde","Klassiek":"klassiek","Wereldkampioenschap":"wk","Memorabel":"memorabel"}[c]||"memorabel";
-}
-function catIcon(c) {
-  return {"Grote Ronde":"🏆","Klassiek":"🏔️","Wereldkampioenschap":"🌍","Memorabel":"⚡"}[c]||"⚡";
-}
-function dots(n) {
-  return [0,1,2].map(i=>`<div class="dot${i<n?' filled':''}"></div>`).join('');
-}
+function catClass(c){return{"Grote Ronde":"grote-ronde","Klassiek":"klassiek","Wereldkampioenschap":"wk","Memorabel":"memorabel"}[c]||"memorabel";}
+function catIcon(c){return{"Grote Ronde":"🏆","Klassiek":"🏔️","Wereldkampioenschap":"🌍","Memorabel":"⚡"}[c]||"⚡";}
+function dots(n){return[0,1,2].map(i=>`<div class="dot${i<n?' filled':''}"></div>`).join('');}
 
 // ── SCANNER ───────────────────────────────────────────────────────────────────
 let scanning = false;
 let scanInterval = null;
-const video   = document.getElementById('scanner-video');
-const canvas  = document.getElementById('scanner-canvas');
-const ctx     = canvas.getContext('2d');
+const video      = document.getElementById('scanner-video');
+const canvas     = document.getElementById('scanner-canvas');
+const ctx        = canvas.getContext('2d');
 const scannerEl  = document.getElementById('scanner-container');
 const cardEl     = document.getElementById('card-container');
 const fallbackEl = document.getElementById('scanner-fallback');
-const videoWrapper = document.getElementById('video-wrapper');
+const videoWrap  = document.getElementById('video-wrapper');
+const statusEl   = document.getElementById('scan-status');
+
+function startScanning() {
+  scanning = true;
+  if (scanInterval) clearInterval(scanInterval);
+  scanInterval = setInterval(scanTick, 200);
+}
 
 async function startScanner() {
   scannerEl.style.display = 'flex';
-  cardEl.style.display = 'none';
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    videoWrap.style.display = 'none';
+    fallbackEl.style.display = 'flex';
+    return;
+  }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }
+      video: { facingMode: { ideal: 'environment' } }
     });
     video.srcObject = stream;
-    video.play().catch(e => console.warn('play err:', e));
-    scanning = true;
-    scanInterval = setInterval(scanTick, 300);
+    // Start scan loop as soon as video has enough data
+    video.addEventListener('canplay', startScanning, { once: true });
+    // Fallback: also start after 2s even if canplay didn't fire
+    setTimeout(() => { if (!scanning) startScanning(); }, 2000);
+    video.play().catch(e => {
+      console.warn('play:', e);
+      startScanning();
+    });
   } catch (err) {
-    console.warn('Camera:', err);
-    videoWrapper.style.display = 'none';
+    console.warn('Camera error:', err);
+    videoWrap.style.display = 'none';
     fallbackEl.style.display = 'flex';
   }
 }
 
 function scanTick() {
-  if (!scanning || !video.videoWidth || !video.videoHeight) return;
-  const W = Math.min(video.videoWidth, 800);
-  const H = Math.round(video.videoHeight * W / video.videoWidth);
-  canvas.width = W;
-  canvas.height = H;
-  ctx.drawImage(video, 0, 0, W, H);
-  const imgData = ctx.getImageData(0, 0, W, H);
-  const code = jsQR(imgData.data, imgData.width, imgData.height, { inversionAttempts: "attemptBoth" });
+  if (!scanning) return;
+  // Need actual video dimensions
+  if (!video.videoWidth || !video.videoHeight) return;
+
+  // Draw full resolution frame
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0);
+
+  let imgData;
+  try { imgData = ctx.getImageData(0, 0, canvas.width, canvas.height); }
+  catch(e) { return; }
+
+  const code = jsQR(imgData.data, imgData.width, imgData.height, {
+    inversionAttempts: "attemptBoth"
+  });
+
   if (code && code.data) {
-    const d = code.data;
-    const m = d.match(/[?&]id=(HC\d{3})/i) || d.match(/\b(HC\d{3})\b/i);
-    if (m || d.toLowerCase().includes('hitster-cycling')) {
+    const d = code.data.trim();
+    statusEl.textContent = '✓ QR gevonden!';
+    statusEl.classList.add('found');
+
+    // 1) Try to extract HC card ID
+    const hcMatch = d.match(/[?&]id=(HC\d{3})/i) || d.match(/\b(HC\d{3})\b/i);
+    if (hcMatch) {
       stopScanner();
-      const cardId = m ? m[1].toUpperCase() : null;
-      window.location.href = cardId
-        ? (window.location.origin + window.location.pathname + '?id=' + cardId)
-        : d;
+      window.location.href = window.location.origin + window.location.pathname + '?id=' + hcMatch[1].toUpperCase();
+      return;
+    }
+    // 2) Navigate to any URL directly
+    if (d.startsWith('http')) {
+      stopScanner();
+      window.location.href = d;
+      return;
     }
   }
 }
@@ -695,6 +750,7 @@ if (!id || !m) {
 } else {
   scannerEl.style.display = 'none';
   cardEl.style.display    = 'flex';
+
   cardEl.innerHTML = `
     <div class="card">
       <div class="card-top">
@@ -713,7 +769,7 @@ if (!id || !m) {
       <div class="divider"></div>
       <div class="card-body">
         <p class="description">${m.lang}</p>
-        <div id="reveal-wrap">
+        <div>
           <button class="btn-reveal" id="btn">🔒 Onthul het jaar</button>
           <div class="year-display" id="yr">
             <div class="year-label">Het jaar</div>
@@ -723,15 +779,13 @@ if (!id || !m) {
         </div>
       </div>
     </div>
-    <button class="btn-scan-next" onclick="window.location.href='?'">📷 Scan volgend kaartje</button>`;
+    <button class="btn-scan-next" onclick="window.location.href=\'?\'">📷 Scan volgend kaartje</button>`;
 
   document.getElementById('btn').addEventListener('click', () => {
     document.getElementById('btn').style.display = 'none';
-    document.getElementById('yr').classList.add('visible');
-    // Scroll to year after reveal
-    setTimeout(() => {
-      document.getElementById('yr').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 150);
+    const yr = document.getElementById('yr');
+    yr.classList.add('visible');
+    setTimeout(() => yr.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
   });
 }
 </script>
