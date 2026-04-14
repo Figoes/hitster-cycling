@@ -608,7 +608,7 @@ function tick() {
     qrCanvas.height = qrVideo.videoHeight;
     qrCtx.drawImage(qrVideo, 0, 0);
     const d    = qrCtx.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
-    const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'dontInvert' });
+    const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'attemptBoth' });
     if (code && code.data) {
       stopScanner();
       window.location.href = code.data;
