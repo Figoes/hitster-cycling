@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hitster Cycling</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
+  <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
   <style>
     :root {
       --pink:    #FF2D78;
@@ -262,8 +262,6 @@
     style="width:100%;height:100%;object-fit:cover;"></video>
   <button onclick="stopScanner()" style="position:absolute;top:20px;right:20px;background:rgba(0,0,0,0.6);border:2px solid #FF2D78;color:#FF2D78;font-size:1.2rem;padding:8px 16px;border-radius:10px;cursor:pointer;">✕ Sluiten</button>
 </div>
-<canvas id="qr-canvas" style="display:none"></canvas>
-
 <div class="topbar">
   <img src="logo.png" alt="">
   <div class="logo"><span class="h">HITSTER</span> <span class="c">CYCLING</span></div>
@@ -575,55 +573,22 @@ if (!m) {
   });
 }
 
-// ── QR SCANNER (getUserMedia → jsQR) ─────────────────────────────────────────
-const qrVideo  = document.getElementById('qr-video');
-const qrCanvas = document.getElementById('qr-canvas');
-const qrCtx    = qrCanvas.getContext('2d');
-let   scanning = false;
+// ── QR SCANNER (ZXing) ───────────────────────────────────────────────────────
+const codeReader = new ZXing.BrowserQRCodeReader();
 
 async function openScanner() {
-  if (scanning) { stopScanner(); return; }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' } }
-    });
-    qrVideo.srcObject = stream;
-    document.getElementById('qr-overlay').style.display = 'flex';
-    qrVideo.onplay = function () {
-      scanning = true;
-      requestAnimationFrame(tick);
-    };
-    qrVideo.play();
-  } catch (e) {
-    alert('Camera niet beschikbaar: ' + e.message);
-  }
-}
-
-function tick() {
-  if (!scanning) return;
-  if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA
-      && qrVideo.videoWidth > 0
-      && qrVideo.videoHeight > 0) {
-    qrCanvas.width  = qrVideo.videoWidth;
-    qrCanvas.height = qrVideo.videoHeight;
-    qrCtx.drawImage(qrVideo, 0, 0);
-    const d    = qrCtx.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
-    const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'attemptBoth' });
-    if (code && code.data) {
-      stopScanner();
-      window.location.href = code.data;
-      return;
+  document.getElementById('qr-overlay').style.display = 'flex';
+  codeReader.decodeFromVideoDevice(null, 'qr-video', (result, err) => {
+    if (result) {
+      codeReader.reset();
+      document.getElementById('qr-overlay').style.display = 'none';
+      window.location.href = result.getText();
     }
-  }
-  requestAnimationFrame(tick);
+  });
 }
 
 function stopScanner() {
-  scanning = false;
-  if (qrVideo.srcObject) {
-    qrVideo.srcObject.getTracks().forEach(t => t.stop());
-    qrVideo.srcObject = null;
-  }
+  codeReader.reset();
   document.getElementById('qr-overlay').style.display = 'none';
 }
 </script>
