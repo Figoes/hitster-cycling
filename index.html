@@ -589,9 +589,11 @@ async function openScanner() {
     qrVideo.srcObject = stream;
     qrVideo.style.display = 'block';
     scanBtn.textContent = '✕ Stop scanner';
-    await qrVideo.play();
-    scanning = true;
-    requestAnimationFrame(tick);
+    qrVideo.onplay = function () {
+      scanning = true;
+      requestAnimationFrame(tick);
+    };
+    qrVideo.play();
   } catch (e) {
     alert('Camera niet beschikbaar: ' + e.message);
   }
@@ -599,7 +601,7 @@ async function openScanner() {
 
 function tick() {
   if (!scanning) return;
-  if (qrVideo.readyState >= 2) {
+  if (qrVideo.videoWidth && qrVideo.videoHeight) {
     qrCanvas.width  = qrVideo.videoWidth;
     qrCanvas.height = qrVideo.videoHeight;
     qrCtx.drawImage(qrVideo, 0, 0);
