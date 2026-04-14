@@ -257,7 +257,9 @@
 </head>
 <body>
 
-<input type="file" id="qr-input" accept="image/*" capture="environment" style="display:none">
+<video id="qr-video" playsinline muted
+  style="display:none;width:calc(100% - 32px);max-width:480px;border-radius:14px;
+         margin:8px 16px 4px;object-fit:cover;aspect-ratio:1;background:#000;"></video>
 <canvas id="qr-canvas" style="display:none"></canvas>
 
 <div class="topbar">
@@ -571,35 +573,56 @@ if (!m) {
   });
 }
 
-// ── QR SCANNER (file input → jsQR) ───────────────────────────────────────────
-const qrInput  = document.getElementById('qr-input');
+// ── QR SCANNER (getUserMedia → jsQR) ─────────────────────────────────────────
+const qrVideo  = document.getElementById('qr-video');
 const qrCanvas = document.getElementById('qr-canvas');
 const qrCtx    = qrCanvas.getContext('2d');
+const scanBtn  = document.getElementById('scan-btn');
+let   scanning = false;
 
-function openScanner() {
-  qrInput.value = '';   // allow re-selecting same file
-  qrInput.click();
+async function openScanner() {
+  if (scanning) { stopScanner(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' } }
+    });
+    qrVideo.srcObject = stream;
+    qrVideo.style.display = 'block';
+    scanBtn.textContent = '✕ Stop scanner';
+    await qrVideo.play();
+    scanning = true;
+    requestAnimationFrame(tick);
+  } catch (e) {
+    alert('Camera niet beschikbaar: ' + e.message);
+  }
 }
 
-qrInput.addEventListener('change', function () {
-  const file = this.files[0];
-  if (!file) return;
-  const img = new Image();
-  img.onload = function () {
-    qrCanvas.width  = img.width;
-    qrCanvas.height = img.height;
-    qrCtx.drawImage(img, 0, 0);
-    const data = qrCtx.getImageData(0, 0, img.width, img.height);
-    const code = jsQR(data.data, data.width, data.height, { inversionAttempts: 'dontInvert' });
+function tick() {
+  if (!scanning) return;
+  if (qrVideo.readyState >= 2) {
+    qrCanvas.width  = qrVideo.videoWidth;
+    qrCanvas.height = qrVideo.videoHeight;
+    qrCtx.drawImage(qrVideo, 0, 0);
+    const d    = qrCtx.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
+    const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'dontInvert' });
     if (code && code.data) {
+      stopScanner();
       window.location.href = code.data;
-    } else {
-      alert('Geen QR-code herkend. Probeer opnieuw.');
+      return;
     }
-    URL.revokeObjectURL(img.src);
-  };
-  img.src = URL.createObjectURL(file);
-});
+  }
+  requestAnimationFrame(tick);
+}
+
+function stopScanner() {
+  scanning = false;
+  if (qrVideo.srcObject) {
+    qrVideo.srcObject.getTracks().forEach(t => t.stop());
+    qrVideo.srcObject = null;
+  }
+  qrVideo.style.display = 'none';
+  scanBtn.textContent = '📷 Scan nieuwe kaart';
+}
 </script>
 </body>
 </html>
